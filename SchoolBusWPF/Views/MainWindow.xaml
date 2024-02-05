@@ -15,15 +15,15 @@
 
         <Border BorderBrush="LightGray" BorderThickness="0 0 1 0">
             <StackPanel Grid.Column="0" Margin="20 20 20 0">
-                <Image x:Name="myImage" Source="C:\Users\Lenovo\source\repos\SchoolBusWPF\SchoolBusWPF\Images\wbs.png" HorizontalAlignment="Left" Margin="0 0 0 20" VerticalAlignment="Top"/>
+                <Image x:Name="schoolImage" HorizontalAlignment="Left" Width="120" Margin="0 0 0 20" VerticalAlignment="Top" />
 
-                <Button x:Name="Rides" Style="{StaticResource NavigationButton}" Click="Rides_Click">Rides</Button>
-                <Button x:Name="Groups" Style="{StaticResource NavigationButton}" Click="Groups_Click">Groups</Button>
-                <Button x:Name="Students" Style="{StaticResource NavigationButton}" Click="Students_Click">Students</Button>
-                <Button x:Name="Parents" Style="{StaticResource NavigationButton}" Click="Parents_Click">Parents</Button>
-                <Button x:Name="Drivers" Style="{StaticResource NavigationButton}" Click="Drivers_Click">Drivers</Button>
-                <Button x:Name="Cars" Style="{StaticResource NavigationButton}" Click="Cars_Click">Cars</Button>
-                <Button x:Name="Holidays" Style="{StaticResource NavigationButton}" Click="Holidays_Click">Holidays</Button>
+                <Button x:Name="Rides" Style="{StaticResource NavigationButton}" Click="Rides_Click" Content="Rides" />
+                <Button x:Name="Groups" Style="{StaticResource NavigationButton}" Click="Groups_Click" Content="Groups" />
+                <Button x:Name="Students" Style="{StaticResource NavigationButton}" Click="Students_Click" Content="Students" />
+                <Button x:Name="Parents" Style="{StaticResource NavigationButton}" Click="Parents_Click" Content="Parents" />
+                <Button x:Name="Drivers" Style="{StaticResource NavigationButton}" Click="Drivers_Click" Content="Drivers" />
+                <Button x:Name="Cars" Style="{StaticResource NavigationButton}" Click="Cars_Click" Content="Cars" />
+                <Button x:Name="Holidays" Style="{StaticResource NavigationButton}" Click="Holidays_Click" Content="Holidays" />
             </StackPanel>
         </Border>
 
@@ -55,7 +55,7 @@
 
                         <materialDesign:Chip FontSize="14" FontWeight="SemiBold" Content="James Willock">
                             <materialDesign:Chip.Icon>
-                                <Image Source="C:\Users\Lenovo\source\repos\SchoolBusWPF\SchoolBusWPF\Images\user4.jpg" />
+                                <Image x:Name="userImage" />
                             </materialDesign:Chip.Icon>
                         </materialDesign:Chip>
                     </StackPanel>

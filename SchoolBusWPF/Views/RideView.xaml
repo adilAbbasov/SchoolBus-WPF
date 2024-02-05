@@ -44,17 +44,62 @@
                             <ComboBox Style="{StaticResource ComboBox}" ItemsSource="{Binding Cars}" DisplayMemberPath="PlateNumber" SelectedItem="{Binding Car}" />
                         </StackPanel>
 
-                        <Grid Margin="0 30 0 5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-
-                            <Button Grid.Column="0" Style="{StaticResource CRUDButton}" Width="80" Background="ForestGreen" HorizontalAlignment="Center" Command="{Binding SaveChangesCommand}" CommandParameter="{Binding RideData}">Save</Button>
-                            <Button Grid.Column="1" Style="{StaticResource CRUDButton}" Width="80" Background="OrangeRed" HorizontalAlignment="Center" Command="{Binding ClosePopupCommand}">Cancel</Button>
-                        </Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 20 0 0">
+                            <Button Style="{StaticResource CRUDButton}" Width="80" Background="ForestGreen" HorizontalAlignment="Center" Command="{Binding SaveChangesCommand}" CommandParameter="{Binding RideData}" Content="Save" Margin="0 0 15 0" />
+                            <Button Style="{StaticResource CRUDButton}" Width="80" Background="OrangeRed" HorizontalAlignment="Center" Command="{Binding ClosePopupCommand}" Content="Cancel" />
+                        </StackPanel>
                     </StackPanel>
                 </Border>
+            </Popup>
+
+            <Popup x:Name="infoPopup" IsOpen="{Binding IsInfoPopupOpen}" Placement="Center" PlacementTarget="{Binding ElementName=rootGrid}" AllowsTransparency="True">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="640">
+                    <Border Background="White" BorderBrush="LightGray" BorderThickness="1" CornerRadius="20">
+                        <StackPanel materialDesign:ShadowAssist.Darken="True" Margin="25 20">
+                            <TextBlock Foreground="Orange" FontSize="24" Margin="0 0 0 10">Selected Students</TextBlock>
+
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0 5 0 0">
+                                <TextBlock Foreground="DimGray" FontSize="15" Text="Selected student count:  " />
+                                <TextBlock FontSize="15" Text="{Binding SelectedStudentCount}" />
+                            </StackPanel>
+
+                            <ListView Grid.Row="1" FontSize="14" Margin="0 5 0 0" ItemsSource="{Binding Students}">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="First Name" DisplayMemberBinding="{Binding FirstName}" />
+                                        <GridViewColumn Header="Last Name" DisplayMemberBinding="{Binding LastName}" />
+                                        <GridViewColumn Header="Home Address" DisplayMemberBinding="{Binding HomeAddress}" />
+                                        <GridViewColumn Header="Other Address" DisplayMemberBinding="{Binding OtherAddress}" />
+                                        <GridViewColumn Header="Group" DisplayMemberBinding="{Binding Group.Title}" />
+                                        
+                                        <GridViewColumn Header="Actions">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button Style="{StaticResource MaterialDesignIconForegroundButton}" Height="30" Width="30" Margin="0 0 5 0" Command="{Binding DataContext.RemoveStudentCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}">
+                                                            <materialDesign:PackIcon Width="20" Height="20" Kind="RemoveBold" Foreground="OrangeRed" />
+                                                        </Button>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignGridViewItem}">
+                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 20 0 0">
+                                <Button Style="{StaticResource CRUDButton}" Width="80" Background="ForestGreen" HorizontalAlignment="Center" Command="{Binding SaveInfoChangesCommand}" Content="Save" Margin="0 0 15 0" />
+                                <Button Style="{StaticResource CRUDButton}" Width="80" Background="OrangeRed" HorizontalAlignment="Center" Command="{Binding CloseInfoPopupCommand}" Content="Cancel" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </ScrollViewer>
             </Popup>
 
             <Popup x:Name="studentPopup" IsOpen="{Binding IsStudentPopupOpen}" Placement="Center" PlacementTarget="{Binding ElementName=rootGrid}" AllowsTransparency="True">
@@ -70,7 +115,7 @@
                                 <TextBlock FontSize="15" Text="{Binding SelectedStudentCount}" />
                             </StackPanel>
 
-                            <ListView Grid.Row="1" FontSize="14" Margin="0 5 0 20" ItemsSource="{Binding Students}">
+                            <ListView Grid.Row="1" FontSize="14" Margin="0 5 0 0" ItemsSource="{Binding Students}">
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn Header="First Name" DisplayMemberBinding="{Binding FirstName}" />
@@ -83,7 +128,7 @@
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <Button Style="{StaticResource MaterialDesignIconForegroundButton}" Height="30" Width="30" Margin="0 0 5 0" Tag="{Binding}" Click="StudentButtonClick">
+                                                        <Button Style="{StaticResource MaterialDesignIconForegroundButton}" Height="30" Width="30" Margin="0 0 5 0" Click="StudentButtonClick">
                                                             <materialDesign:PackIcon Width="20" Height="20" Kind="AddBold" Foreground="ForestGreen" />
                                                         </Button>
                                                     </StackPanel>
@@ -100,9 +145,9 @@
                                 </ListView.ItemContainerStyle>
                             </ListView>
 
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                <Button Grid.Column="0" Style="{StaticResource CRUDButton}" Width="80" Background="ForestGreen" HorizontalAlignment="Center" Command="{Binding SaveStudentChangesCommand}" Margin="0 0 15 0">Save</Button>
-                                <Button Grid.Column="1" Style="{StaticResource CRUDButton}" Width="80" Background="OrangeRed" HorizontalAlignment="Center" Command="{Binding CloseStudentPopupCommand}">Cancel</Button>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 20 0 0">
+                                <Button Style="{StaticResource CRUDButton}" Width="80" Background="ForestGreen" HorizontalAlignment="Center" Command="{Binding SaveStudentChangesCommand}" Content="Save" Margin="0 0 15 0" />
+                                <Button Style="{StaticResource CRUDButton}" Width="80" Background="OrangeRed" HorizontalAlignment="Center" Command="{Binding CloseStudentPopupCommand}" Content="Cancel" />
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -129,8 +174,11 @@
                                     <Button ToolTip="Delete" Style="{StaticResource MaterialDesignIconForegroundButton}" Height="30" Width="30" Command="{Binding DataContext.DeleteEntityCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}">
                                         <materialDesign:PackIcon Width="20" Height="20" Kind="DeleteOutline" Foreground="OrangeRed" />
                                     </Button>
+                                    <Button ToolTip="Add student" Style="{StaticResource MaterialDesignIconForegroundButton}" Height="30" Width="30" Command="{Binding DataContext.OpenInfoPopupCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}">
+                                        <materialDesign:PackIcon Width="22" Height="22" Kind="InformationVariant" Foreground="DodgerBlue" />
+                                    </Button>
                                     <Button ToolTip="Add student" Style="{StaticResource MaterialDesignIconForegroundButton}" Height="30" Width="30" Command="{Binding DataContext.OpenStudentPopupCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}">
-                                        <materialDesign:PackIcon Width="20" Height="20" Kind="AddBold" Foreground="DodgerBlue" />
+                                        <materialDesign:PackIcon Width="20" Height="20" Kind="AddBold" Foreground="SandyBrown" />
                                     </Button>
                                 </StackPanel>
                             </DataTemplate>

@@ -76,6 +76,16 @@ namespace SchoolBusWPF.ViewModels
             }
         }
 
+        private bool _isInfoPopupOpen;
+        public bool IsInfoPopupOpen
+        {
+            get { return _isInfoPopupOpen; }
+            set
+            {
+                _isInfoPopupOpen = value;
+                OnPropertyChanged(nameof(IsInfoPopupOpen));
+            }
+        }
 
         private string? _fullName;
         [Required(ErrorMessage = "Fullname is required")]
@@ -184,6 +194,10 @@ namespace SchoolBusWPF.ViewModels
         public ICommand OpenStudentPopupCommand { get; set; }
         public ICommand SaveStudentChangesCommand { get; set; }
         public ICommand CloseStudentPopupCommand { get; set; }
+        public ICommand OpenInfoPopupCommand { get; set; }
+        public ICommand SaveInfoChangesCommand { get; set; }
+        public ICommand CloseInfoPopupCommand { get; set; }
+        public ICommand RemoveStudentCommand { get; set; }
 
         public RideViewModel()
         {
@@ -202,6 +216,10 @@ namespace SchoolBusWPF.ViewModels
             OpenStudentPopupCommand = new RelayCommand(OpenStudentPopup);
             SaveStudentChangesCommand = new RelayCommand(SaveStudentChanges, CanSaveStudentChanges);
             CloseStudentPopupCommand = new RelayCommand(CloseStudentPopup);
+            OpenInfoPopupCommand = new RelayCommand(OpenInfoPopup);
+            SaveInfoChangesCommand = new RelayCommand(SaveInfoChanges, CanSaveInfoChanges);
+            CloseInfoPopupCommand = new RelayCommand(CloseInfoPopup);
+            RemoveStudentCommand = new RelayCommand(RemoveStudent);
         }
 
         public override void OpenPopup(object obj)
@@ -309,6 +327,9 @@ namespace SchoolBusWPF.ViewModels
             Rides = new ObservableCollection<Ride>([.. _dbContext.Rides]);
         }
 
+
+        // Adding/Removing students to ride
+
         public void OpenStudentPopup(object obj)
         {
             if (obj is null || obj is not Ride objAsRide)
@@ -367,8 +388,54 @@ namespace SchoolBusWPF.ViewModels
             }
 
             _dbContext.SaveChanges();
-
             CloseStudentPopup(obj);
+        }
+
+
+        // Removing students from selected students
+
+        public void OpenInfoPopup(object obj)
+        {
+            if (obj is null || obj is not Ride objAsRide)
+                return;
+
+            RideId = objAsRide.Id;
+            Students = new ObservableCollection<Student>([.. _dbContext.Students.Include(s => s.Group).Where(s => s.RideId == RideId)]);
+            SelectedStudentCount = Students.Count;
+
+            IsInfoPopupOpen = true;
+        }
+
+        public void RemoveStudent(object obj)
+        {
+            if (obj is null || obj is not Student objAsStudent)
+                return;
+
+            Students.Remove(objAsStudent);
+            SelectedStudentCount--;
+            SelectedStudents.Add(objAsStudent);
+        }
+
+        public void CloseInfoPopup(object obj)
+        {
+            IsInfoPopupOpen = false;
+            SelectedStudents.Clear();
+        }
+
+        public bool CanSaveInfoChanges(object obj)
+        {
+            return SelectedStudents.Count > 0;
+        }
+
+        public void SaveInfoChanges(object obj)
+        {
+            foreach (var student in SelectedStudents)
+            {
+                student.RideId = null;
+            }
+
+            _dbContext.SaveChanges();
+            CloseInfoPopup(obj);
         }
 
         private void LoadDriver()

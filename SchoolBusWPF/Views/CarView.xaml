@@ -31,15 +31,10 @@
                             <ComboBox Style="{StaticResource ComboBox}" ItemsSource="{Binding Drivers}" DisplayMemberPath="FullName" SelectedItem="{Binding Driver}" />
                         </StackPanel>
 
-                        <Grid Margin="0 30 0 5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-
-                            <Button Grid.Column="0" Style="{StaticResource CRUDButton}" Width="80" Background="ForestGreen" HorizontalAlignment="Center" Command="{Binding SaveChangesCommand}" CommandParameter="{Binding CarData}">Save</Button>
-                            <Button Grid.Column="1" Style="{StaticResource CRUDButton}" Width="80" Background="OrangeRed" HorizontalAlignment="Center" Command="{Binding ClosePopupCommand}">Cancel</Button>
-                        </Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 20 0 0">
+                            <Button Style="{StaticResource CRUDButton}" Width="80" Background="ForestGreen" HorizontalAlignment="Center" Command="{Binding SaveChangesCommand}" CommandParameter="{Binding CarData}" Content="Save" Margin="0 0 15 0" />
+                            <Button Style="{StaticResource CRUDButton}" Width="80" Background="OrangeRed" HorizontalAlignment="Center" Command="{Binding ClosePopupCommand}" Content="Cancel" />
+                        </StackPanel>
                     </StackPanel>
                 </Border>
             </Popup>
