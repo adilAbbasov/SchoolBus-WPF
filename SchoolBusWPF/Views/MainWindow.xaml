@@ -1,0 +1,76 @@
+﻿<Window x:Class="SchoolBusWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SchoolBusWPF"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="MainWindow" WindowState="Maximized" Height="450" Width="800">
+    <Grid x:Name="rootGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Border BorderBrush="LightGray" BorderThickness="0 0 1 0">
+            <StackPanel Grid.Column="0" Margin="20 20 20 0">
+                <Image x:Name="myImage" Source="C:\Users\Lenovo\source\repos\SchoolBusWPF\SchoolBusWPF\Images\wbs.png" HorizontalAlignment="Left" Margin="0 0 0 20" VerticalAlignment="Top"/>
+
+                <Button x:Name="Rides" Style="{StaticResource NavigationButton}" Click="Rides_Click">Rides</Button>
+                <Button x:Name="Groups" Style="{StaticResource NavigationButton}" Click="Groups_Click">Groups</Button>
+                <Button x:Name="Students" Style="{StaticResource NavigationButton}" Click="Students_Click">Students</Button>
+                <Button x:Name="Parents" Style="{StaticResource NavigationButton}" Click="Parents_Click">Parents</Button>
+                <Button x:Name="Drivers" Style="{StaticResource NavigationButton}" Click="Drivers_Click">Drivers</Button>
+                <Button x:Name="Cars" Style="{StaticResource NavigationButton}" Click="Cars_Click">Cars</Button>
+                <Button x:Name="Holidays" Style="{StaticResource NavigationButton}" Click="Holidays_Click">Holidays</Button>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="75"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Border BorderBrush="LightGray" BorderThickness="0 0 0 1">
+                <Grid Grid.Row="0" Margin="25 15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" HorizontalAlignment="Left" Orientation="Horizontal">
+                        <Button Width="30" Height="30" Background="White" BorderBrush="Orange" BorderThickness="1" Margin="0 0 10 0" Style="{StaticResource MaterialDesignFloatingActionButton}">
+                            <materialDesign:PackIcon Kind="Search" Foreground="Orange" />
+                        </Button>
+
+                        <TextBox x:Name="searchTxtBx" Width="350" FontSize="14" VerticalAlignment="Center" materialDesign:HintAssist.Hint="Search" materialDesign:TextFieldAssist.UnderlineBrush="Orange" CaretBrush="Black" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+                        <!--<Button>-->
+                        <materialDesign:PackIcon Kind="BellBadge" VerticalAlignment="Center" Height="20" Width="20" Foreground="Orange" Margin="0 0 15 0" />
+                        <!--</Button>-->
+
+                        <materialDesign:Chip FontSize="14" FontWeight="SemiBold" Content="James Willock">
+                            <materialDesign:Chip.Icon>
+                                <Image Source="C:\Users\Lenovo\source\repos\SchoolBusWPF\SchoolBusWPF\Images\user4.jpg" />
+                            </materialDesign:Chip.Icon>
+                        </materialDesign:Chip>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="1" Background="#fafafa">
+                <ScrollViewer>
+                    <Grid Grid.Row="1" Margin="25 15">
+                        <Grid>
+                            <Frame x:Name="mainFrame" NavigationUIVisibility="Hidden" />
+                        </Grid>
+                    </Grid>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
