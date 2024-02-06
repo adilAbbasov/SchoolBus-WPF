@@ -1,11 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SCHOOL_BUS.Commands;
 using SchoolBusWPF.Models.Concretes;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Windows.Input;
 
 namespace SchoolBusWPF.ViewModels
 {
@@ -33,8 +29,7 @@ namespace SchoolBusWPF.ViewModels
             }
         }
 
-        private string? _name = "";
-        [Required(ErrorMessage = "Name is required")]
+        private string? _name;
         public string? Name
         {
             get { return _name; }
@@ -42,13 +37,11 @@ namespace SchoolBusWPF.ViewModels
             {
                 _name = value;
                 OnPropertyChanged(nameof(Name));
-
-                Validate(nameof(Name), value);
+                ValidateProperty(nameof(Name), value, "Name is required.");
             }
         }
 
         private DateTime? _startDate;
-        [Required(ErrorMessage = "First date is required")]
         public DateTime? StartDate
         {
             get { return _startDate; }
@@ -56,24 +49,22 @@ namespace SchoolBusWPF.ViewModels
             {
                 _startDate = value;
                 OnPropertyChanged(nameof(StartDate));
-
-                if (StartDate > EndDate)
-                {
-                    var startDateErrors = new List<string>()
-                    {
-                        "Start date can not be after the end date"
-                    };
-
-                    Errors.Add(nameof(StartDate), startDateErrors);
-                    //ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(StartDate)));
-                }
-
-                Validate(nameof(StartDate), value);
+                ValidateStartDate();
             }
         }
 
+        private void ValidateStartDate()
+        {
+            ClearErrors(nameof(StartDate));
+
+            if (StartDate is null)
+                AddError(nameof(StartDate), "Start date is required.");
+
+            if(StartDate >= EndDate)
+                AddError(nameof(StartDate), "Start date is not valid.");
+        }
+
         private DateTime? _endDate;
-        [Required(ErrorMessage = "Last date is required")]
         public DateTime? EndDate
         {
             get { return _endDate; }
@@ -81,20 +72,19 @@ namespace SchoolBusWPF.ViewModels
             {
                 _endDate = value;
                 OnPropertyChanged(nameof(EndDate));
-
-                if (EndDate < StartDate)
-                {
-                    var endDateErrors = new List<string>()
-                    {
-                        "End date can not be before the start date"
-                    };
-
-                    Errors.Add(nameof(EndDate), endDateErrors);
-                    //ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(EndDate)));
-                }
-
-                Validate(nameof(EndDate), value);
+                ValidateEndDate();
             }
+        }
+
+        private void ValidateEndDate()
+        {
+            ClearErrors(nameof(EndDate));
+
+            if (EndDate is null)
+                AddError(nameof(EndDate), "End date is required.");
+
+            if (EndDate <= StartDate)
+                AddError(nameof(EndDate), "End date is not valid.");
         }
 
         public HolidayViewModel()
@@ -127,7 +117,7 @@ namespace SchoolBusWPF.ViewModels
 
         public override bool CanSaveChanges(object obj)
         {
-            return Validator.TryValidateObject(this, new ValidationContext(this), null);
+            return !HasErrors;
         }
 
         public override void SaveChanges(object obj)
@@ -190,6 +180,7 @@ namespace SchoolBusWPF.ViewModels
             EndDate = null;
 
             IsUpdate = false;
+            ClearAllErrors();
         }
 
         public override void UpdateEntity(object obj)

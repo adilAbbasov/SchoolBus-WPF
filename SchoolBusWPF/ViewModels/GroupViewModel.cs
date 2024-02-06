@@ -2,12 +2,10 @@
 using SCHOOL_BUS.Commands;
 using SchoolBusWPF.Models.Concretes;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.Windows.Input;
 
 namespace SchoolBusWPF.ViewModels
 {
-	public class GroupViewModel : ViewModelBase
+    public class GroupViewModel : ViewModelBase
 	{
 		private Group _groupData;
 		public Group GroupData
@@ -31,8 +29,7 @@ namespace SchoolBusWPF.ViewModels
 			}
 		}
 
-		private string? _title = "";
-		[Required(ErrorMessage = "Title is required")]
+		private string? _title;
 		public string? Title
 		{
 			get { return _title; }
@@ -40,12 +37,11 @@ namespace SchoolBusWPF.ViewModels
 			{
 				_title = value;
 				OnPropertyChanged(nameof(Title));
-
-				Validate(nameof(Title), value);
+				ValidateProperty(nameof(Title), value, "Title is required.");
 			}
 		}
 
-		public GroupViewModel()
+        public GroupViewModel()
 		{
 			Groups = new ObservableCollection<Group>([.. _dbContext.Groups]);
 
@@ -75,8 +71,8 @@ namespace SchoolBusWPF.ViewModels
 
 		public override bool CanSaveChanges(object obj)
 		{
-			return Validator.TryValidateObject(this, new ValidationContext(this), null);
-		}
+			return !HasErrors;
+        }
 
 		public override void SaveChanges(object obj)
 		{
@@ -130,6 +126,7 @@ namespace SchoolBusWPF.ViewModels
 			IsPopupOpen = false;
 			Title = string.Empty;
             IsUpdate = false;
+			ClearAllErrors();
         }
 
 		public override void UpdateEntity(object obj)

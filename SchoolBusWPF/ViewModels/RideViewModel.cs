@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SCHOOL_BUS.Commands;
 using SchoolBusWPF.Models.Concretes;
-using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
 
 namespace SchoolBusWPF.ViewModels
@@ -88,7 +86,6 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private string? _fullName;
-        [Required(ErrorMessage = "Fullname is required")]
         public string? FullName
         {
             get { return _fullName; }
@@ -96,13 +93,11 @@ namespace SchoolBusWPF.ViewModels
             {
                 _fullName = value;
                 OnPropertyChanged(nameof(FullName));
-
-                Validate(nameof(FullName), value);
+                ValidateProperty(nameof(FullName), value, "Full name is required.");
             }
         }
 
         private string? _type;
-        [Required(ErrorMessage = "Type is required")]
         public string? Type
         {
             get { return _type; }
@@ -110,8 +105,6 @@ namespace SchoolBusWPF.ViewModels
             {
                 _type = value;
                 OnPropertyChanged(nameof(Type));
-
-                Validate(nameof(Type), value);
             }
         }
 
@@ -123,29 +116,24 @@ namespace SchoolBusWPF.ViewModels
             {
                 _isToggleChecked = value;
                 Type = _isToggleChecked ? "School" : "Home";
-
                 OnPropertyChanged(nameof(IsToggleChecked));
             }
         }
 
         private Car? _car;
-        [Required(ErrorMessage = "Car is required")]
         public Car? Car
         {
             get { return _car; }
             set
             {
                 _car = value;
-
                 OnPropertyChanged(nameof(Car));
+                ValidateProperty(nameof(Car), value, "Car is required.");
                 LoadDriver();
-
-                Validate(nameof(Car), value);
             }
         }
 
         private Driver? _driver;
-        [Required(ErrorMessage = "Driver is required")]
         public Driver? Driver
         {
             get { return _driver; }
@@ -153,8 +141,6 @@ namespace SchoolBusWPF.ViewModels
             {
                 _driver = value;
                 OnPropertyChanged(nameof(Driver));
-
-                Validate(nameof(Driver), value);
             }
         }
 
@@ -241,7 +227,7 @@ namespace SchoolBusWPF.ViewModels
 
         public override bool CanSaveChanges(object obj)
         {
-            return Validator.TryValidateObject(this, new ValidationContext(this), null);
+            return !HasErrors;
         }
 
         public override void SaveChanges(object obj)
@@ -298,6 +284,8 @@ namespace SchoolBusWPF.ViewModels
             FullName = string.Empty;
             IsToggleChecked = false;
             Car = null;
+
+            ClearAllErrors();
         }
 
         public override void UpdateEntity(object obj)
@@ -328,7 +316,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
 
-        // Adding/Removing students to ride
+        // Adding/Removing students to the ride
 
         public void OpenStudentPopup(object obj)
         {
@@ -392,7 +380,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
 
-        // Removing students from selected students
+        // Removing students from the ride
 
         public void OpenInfoPopup(object obj)
         {

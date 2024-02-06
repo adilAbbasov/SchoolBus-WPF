@@ -2,14 +2,8 @@
 using SCHOOL_BUS.Commands;
 using SchoolBusWPF.Models.Concretes;
 using SchoolBusWPF.Services;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+using System.Text.RegularExpressions;
 
 namespace SchoolBusWPF.ViewModels
 {
@@ -37,8 +31,7 @@ namespace SchoolBusWPF.ViewModels
             }
         }
 
-        private string? _firstName = "";
-        [Required(ErrorMessage = "First name is required")]
+        private string? _firstName;
         public string? FirstName
         {
             get { return _firstName; }
@@ -46,13 +39,11 @@ namespace SchoolBusWPF.ViewModels
             {
                 _firstName = value;
                 OnPropertyChanged(nameof(FirstName));
-
-                Validate(nameof(FirstName), value);
+                ValidateProperty(nameof(FirstName), value, "First name is required.");
             }
         }
 
-        private string? _lastName = "";
-        [Required(ErrorMessage = "Last name is required")]
+        private string? _lastName;
         public string? LastName
         {
             get { return _lastName; }
@@ -60,13 +51,11 @@ namespace SchoolBusWPF.ViewModels
             {
                 _lastName = value;
                 OnPropertyChanged(nameof(LastName));
-
-                Validate(nameof(LastName), value);
+                ValidateProperty(nameof(LastName), value, "Last name is required.");
             }
         }
 
-        private string? _userName = "";
-        [Required(ErrorMessage = "User name is required")]
+        private string? _userName;
         public string? UserName
         {
             get { return _userName; }
@@ -74,14 +63,11 @@ namespace SchoolBusWPF.ViewModels
             {
                 _userName = value;
                 OnPropertyChanged(nameof(UserName));
-
-                Validate(nameof(UserName), value);
+                ValidateProperty(nameof(UserName), value, "User name is required.");
             }
         }
 
-        private string? _password = "";
-        [Required(ErrorMessage = "Password is required")]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "Invalid input")]
+        private string? _password;
         public string? Password
         {
             get { return _password; }
@@ -89,14 +75,22 @@ namespace SchoolBusWPF.ViewModels
             {
                 _password = value;
                 OnPropertyChanged(nameof(Password));
-
-                Validate(nameof(Password), value);
+                ValidatePassword();
             }
         }
 
-        private string? _phoneNumber = "";
-        [Required(ErrorMessage = "Phone number is required")]
-        [StringLength(9, MinimumLength = 9, ErrorMessage = "Phone number length is incorrect.")]
+        private void ValidatePassword()
+        {
+            ClearErrors(nameof(Password));
+            var pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$";
+
+            if (string.IsNullOrEmpty(Password))
+                AddError(nameof(Password), "Password is required.");
+            else if (!Regex.IsMatch(Password, pattern))
+                AddError(nameof(Password), "Password is not valid.");
+        }
+
+        private string? _phoneNumber;
         public string? PhoneNumber
         {
             get { return _phoneNumber; }
@@ -104,9 +98,18 @@ namespace SchoolBusWPF.ViewModels
             {
                 _phoneNumber = value;
                 OnPropertyChanged(nameof(PhoneNumber));
-
-                Validate(nameof(PhoneNumber), value);
+                ValidatePhoneNumber();
             }
+        }
+
+        private void ValidatePhoneNumber()
+        {
+            ClearErrors(nameof(PhoneNumber));
+
+            if (string.IsNullOrEmpty(PhoneNumber))
+                AddError(nameof(PhoneNumber), "Phone number is required.");
+            else if (PhoneNumber.Length < 9)
+                AddError(nameof(PhoneNumber), "Phone number is not valid.");
         }
 
         public ParentViewModel()
@@ -139,7 +142,7 @@ namespace SchoolBusWPF.ViewModels
 
         public override bool CanSaveChanges(object obj)
         {
-            return Validator.TryValidateObject(this, new ValidationContext(this), null);
+            return !HasErrors;
         }
 
         public override void SaveChanges(object obj)
@@ -208,6 +211,7 @@ namespace SchoolBusWPF.ViewModels
             PhoneNumber = string.Empty;
 
             IsUpdate = false;
+            ClearAllErrors();
         }
 
         public override void UpdateEntity(object obj)

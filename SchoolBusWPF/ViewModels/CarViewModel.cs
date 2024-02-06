@@ -3,7 +3,6 @@ using SCHOOL_BUS.Commands;
 using SchoolBusWPF.Models.Concretes;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using System.Windows.Input;
 
 namespace SchoolBusWPF.ViewModels
 {
@@ -43,7 +42,6 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private string? _name;
-        [Required(ErrorMessage = "Name is required")]
         public string? Name
         {
             get { return _name; }
@@ -51,14 +49,11 @@ namespace SchoolBusWPF.ViewModels
             {
                 _name = value;
                 OnPropertyChanged(nameof(Name));
-
-                Validate(nameof(Name), value);
+                ValidateProperty(nameof(Name), value, "Name is required.");
             }
         }
 
         private string? _plateNumber;
-        [Length(7, 7, ErrorMessage = "Plate number length is incorrect")]
-        [Required(ErrorMessage = "Plate number is required")]
         public string? PlateNumber
         {
             get { return _plateNumber; }
@@ -66,13 +61,21 @@ namespace SchoolBusWPF.ViewModels
             {
                 _plateNumber = value;
                 OnPropertyChanged(nameof(PlateNumber));
-
-                Validate(nameof(PlateNumber), value);
+                ValidatePlateNumber();
             }
         }
 
+        private void ValidatePlateNumber()
+        {
+            ClearErrors(nameof(PlateNumber));
+
+            if (string.IsNullOrEmpty(PlateNumber))
+                AddError(nameof(PlateNumber), "Plate number is required.");
+            else if (PlateNumber.Length < 7)
+                AddError(nameof(PlateNumber), "Plate number is not valid.");
+        }
+
         private string? _seatCount;
-        [Required(ErrorMessage = "Seat count is required")]
         public string? SeatCount
         {
             get { return _seatCount; }
@@ -80,13 +83,11 @@ namespace SchoolBusWPF.ViewModels
             {
                 _seatCount = value;
                 OnPropertyChanged(nameof(SeatCount));
-
-                Validate(nameof(SeatCount), value);
+                ValidateProperty(nameof(SeatCount), value, "Seat count is required.");
             }
         }
 
         private Driver? _driver;
-        [Required(ErrorMessage = "Driver is required")]
         public Driver? Driver
         {
             get { return _driver; }
@@ -94,8 +95,7 @@ namespace SchoolBusWPF.ViewModels
             {
                 _driver = value;
                 OnPropertyChanged(nameof(Driver));
-
-                Validate(nameof(Driver), value);
+                ValidateProperty(nameof(Driver), value, "Driver is required.");
             }
         }
 
@@ -130,7 +130,7 @@ namespace SchoolBusWPF.ViewModels
 
         public override bool CanSaveChanges(object obj)
         {
-            return Validator.TryValidateObject(this, new ValidationContext(this), null);
+            return !HasErrors;
         }
 
         public override void SaveChanges(object obj)
@@ -196,6 +196,7 @@ namespace SchoolBusWPF.ViewModels
             Driver = null;
 
             IsUpdate = false;
+            ClearAllErrors();
         }
 
         public override void UpdateEntity(object obj)

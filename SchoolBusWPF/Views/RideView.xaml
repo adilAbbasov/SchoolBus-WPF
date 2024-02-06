@@ -15,14 +15,14 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" HorizontalAlignment="Left">
-            <TextBlock FontSize="30" Foreground="Orange" FontWeight="SemiBold" HorizontalAlignment="Left">Rides</TextBlock>
+            <TextBlock FontSize="30" Foreground="Orange" FontWeight="SemiBold" HorizontalAlignment="Left" Text="Rides" />
 
-            <Button Style="{StaticResource CRUDButton}" Width="65" Height="30" HorizontalAlignment="Left" Margin="0 10 0 0" Command="{Binding OpenPopupCommand}">Add</Button>
+            <Button Style="{StaticResource CRUDButton}" Width="65" Height="30" HorizontalAlignment="Left" Margin="0 10 0 0" Command="{Binding OpenPopupCommand}" Content="Add" />
 
             <Popup x:Name="ridePopup" IsOpen="{Binding IsPopupOpen}" Placement="Center" PlacementTarget="{Binding ElementName=rootGrid}" AllowsTransparency="True">
                 <Border Background="White" BorderBrush="LightGray" BorderThickness="1" CornerRadius="20">
                     <StackPanel Orientation="Vertical" Width="300" materialDesign:ShadowAssist.Darken="True" Margin="20">
-                        <TextBlock HorizontalAlignment="Center" Foreground="Orange" FontSize="24">New Ride</TextBlock>
+                        <TextBlock HorizontalAlignment="Center" Foreground="Orange" FontSize="24" Text="New Ride" />
 
                         <StackPanel Margin="0 15 0 0">
                             <TextBox Style="{StaticResource TextBox}" materialDesign:HintAssist.Hint="Full name" Text="{Binding FullName}" Margin="0 0 0 20" />
@@ -56,7 +56,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="640">
                     <Border Background="White" BorderBrush="LightGray" BorderThickness="1" CornerRadius="20">
                         <StackPanel materialDesign:ShadowAssist.Darken="True" Margin="25 20">
-                            <TextBlock Foreground="Orange" FontSize="24" Margin="0 0 0 10">Selected Students</TextBlock>
+                            <TextBlock Foreground="Orange" FontSize="24" Margin="0 0 0 10" Text="Selected Students" /> 
 
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0 5 0 0">
                                 <TextBlock Foreground="DimGray" FontSize="15" Text="Selected student count:  " />
@@ -106,7 +106,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="640">
                     <Border Background="White" BorderBrush="LightGray" BorderThickness="1" CornerRadius="20">
                         <StackPanel materialDesign:ShadowAssist.Darken="True" Margin="25 20">
-                            <TextBlock Foreground="Orange" FontSize="24" Margin="0 0 0 10">Students</TextBlock>
+                            <TextBlock Foreground="Orange" FontSize="24" Margin="0 0 0 10" Text="Students" /> 
 
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0 5 0 0">
                                 <TextBlock Foreground="DimGray" FontSize="15" Text="Seat count:  "/>

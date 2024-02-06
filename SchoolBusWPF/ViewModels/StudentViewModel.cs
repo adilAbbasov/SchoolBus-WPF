@@ -1,14 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SCHOOL_BUS.Commands;
 using SchoolBusWPF.Models.Concretes;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace SchoolBusWPF.ViewModels
 {
@@ -47,8 +40,7 @@ namespace SchoolBusWPF.ViewModels
             }
         }
 
-        private string? _firstName = "";
-        [Required(ErrorMessage = "First name is required")]
+        private string? _firstName;
         public string? FirstName
         {
             get { return _firstName; }
@@ -56,13 +48,11 @@ namespace SchoolBusWPF.ViewModels
             {
                 _firstName = value;
                 OnPropertyChanged(nameof(FirstName));
-
-                Validate(nameof(FirstName), value);
+                ValidateProperty(nameof(FirstName), value, "First name is required.");
             }
         }
 
-        private string? _lastName = "";
-        [Required(ErrorMessage = "Last name is required")]
+        private string? _lastName;
         public string? LastName
         {
             get { return _lastName; }
@@ -70,13 +60,11 @@ namespace SchoolBusWPF.ViewModels
             {
                 _lastName = value;
                 OnPropertyChanged(nameof(LastName));
-
-                Validate(nameof(LastName), value);
+                ValidateProperty(nameof(LastName), value, "Last name is required.");
             }
         }
 
-        private string? _homeAddress = "";
-        [Required(ErrorMessage = "Home address is required")]
+        private string? _homeAddress;
         public string? HomeAddress
         {
             get { return _homeAddress; }
@@ -84,13 +72,11 @@ namespace SchoolBusWPF.ViewModels
             {
                 _homeAddress = value;
                 OnPropertyChanged(nameof(HomeAddress));
-
-                Validate(nameof(HomeAddress), value);
+                ValidateProperty(nameof(HomeAddress), value, "Home address is required.");
             }
         }
 
-        private string? _otherAddress = "";
-        [Required(ErrorMessage = "Home address is required")]
+        private string? _otherAddress;
         public string? OtherAddress
         {
             get { return _otherAddress; }
@@ -98,13 +84,10 @@ namespace SchoolBusWPF.ViewModels
             {
                 _otherAddress = value;
                 OnPropertyChanged(nameof(OtherAddress));
-
-                Validate(nameof(OtherAddress), value);
             }
         }
 
-        private string? _parentUserName = "";
-        [Required(ErrorMessage = "Parent username is required")]
+        private string? _parentUserName;
         public string? ParentUserName
         {
             get { return _parentUserName; }
@@ -112,20 +95,15 @@ namespace SchoolBusWPF.ViewModels
             {
                 _parentUserName = value;
                 OnPropertyChanged(nameof(ParentUserName));
+                ValidateProperty(nameof(ParentUserName), value, "Parent username is required.");
 
-                var isLoaded = LoadParent(_parentUserName);
-
+                var isLoaded = LoadParent(value);
                 if (!isLoaded)
-                {
-                    // Add error
-                }
-
-                Validate(nameof(ParentUserName), value);
+                    AddError(nameof(ParentUserName), "The username you entered does not match any parent username.");
             }
         }
 
         private Parent? _parent;
-        [Required(ErrorMessage = "Parent is required")]
         public Parent? Parent
         {
             get { return _parent; }
@@ -133,13 +111,10 @@ namespace SchoolBusWPF.ViewModels
             {
                 _parent = value;
                 OnPropertyChanged(nameof(Parent));
-
-                Validate(nameof(Parent), value);
             }
         }
 
         private Group? _group;
-        [Required(ErrorMessage = "Group is required")]
         public Group? Group
         {
             get { return _group; }
@@ -147,8 +122,7 @@ namespace SchoolBusWPF.ViewModels
             {
                 _group = value;
                 OnPropertyChanged(nameof(Group));
-
-                Validate(nameof(Group), value);
+                ValidateProperty(nameof(Group), value, "Group is required.");
             }
         }
 
@@ -183,7 +157,7 @@ namespace SchoolBusWPF.ViewModels
 
         public override bool CanSaveChanges(object obj)
         {
-            return Validator.TryValidateObject(this, new ValidationContext(this), null);
+            return !HasErrors;
         }
 
         public override void SaveChanges(object obj)
@@ -247,6 +221,8 @@ namespace SchoolBusWPF.ViewModels
             OtherAddress = string.Empty;
             ParentUserName = string.Empty;
             Group = null;
+
+            ClearAllErrors();
         }
 
         public override void UpdateEntity(object obj)
@@ -285,7 +261,7 @@ namespace SchoolBusWPF.ViewModels
             {
                 Parent = _dbContext.Parents.FirstOrDefault(p => p.UserName == parentUserName);
 
-                if (Parent is null) 
+                if (Parent is null)
                     return false;
             }
             else

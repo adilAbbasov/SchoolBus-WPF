@@ -15,14 +15,14 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" HorizontalAlignment="Left">
-            <TextBlock FontSize="30" Foreground="Orange" FontWeight="SemiBold" HorizontalAlignment="Left">Students</TextBlock>
+            <TextBlock FontSize="30" Foreground="Orange" FontWeight="SemiBold" HorizontalAlignment="Left" Text="Students" />
 
-            <Button Style="{StaticResource CRUDButton}" Width="65" Height="30" HorizontalAlignment="Left" Margin="0 10 0 0" Command="{Binding OpenPopupCommand}">Add</Button>
+            <Button Style="{StaticResource CRUDButton}" Width="65" Height="30" HorizontalAlignment="Left" Margin="0 10 0 0" Command="{Binding OpenPopupCommand}" Content="Add" />
 
             <Popup x:Name="studentPopup" IsOpen="{Binding IsPopupOpen}" Placement="Center" PlacementTarget="{Binding ElementName=rootGrid}" AllowsTransparency="True">
                 <Border Background="White" BorderBrush="LightGray" BorderThickness="1" CornerRadius="20">
                     <StackPanel Orientation="Vertical" Width="300" materialDesign:ShadowAssist.Darken="True" Margin="20">
-                        <TextBlock HorizontalAlignment="Center" Foreground="Orange" FontSize="24">New Student</TextBlock>
+                        <TextBlock HorizontalAlignment="Center" Foreground="Orange" FontSize="24" Text="New Student" />
 
                         <StackPanel Margin="0 15 0 0">
                             <TextBox Style="{StaticResource TextBox}" materialDesign:HintAssist.Hint="Firstname" Margin="0 0 0 15" Text="{Binding FirstName}" />
