@@ -40,73 +40,6 @@ namespace SchoolBusWPF.ViewModels
 
         //
 
-        //public readonly Dictionary<string, List<string>> Errors = [];
-        //public bool HasErrors => Errors.Count > 0;
-
-        //public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
-
-        //public IEnumerable GetErrors(string? propertyName)
-        //{
-        //	if(propertyName is null)
-        //		throw new Exception();
-
-        //	if (Errors.TryGetValue(propertyName, out List<string>? errors))
-        //		return errors;
-        //	else
-        //		return Enumerable.Empty<string>();
-        //}
-
-        //protected void ClearErrors(string propertyName)
-        //{
-        //	if (!Errors.ContainsKey(propertyName))
-        //		return;
-
-        //	Errors.Remove(propertyName);
-        //	ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
-        //}
-
-        //public void ClearAllErrors()
-        //{
-        //	foreach (var propertyName in Errors.Keys.ToList())
-        //	{
-        //		ClearErrors(propertyName);
-        //	}
-        //}
-
-        //public void Validate(string propertyName, object? propertyValue)
-        //{
-        //	if (!IsPopupOpen)
-        //	{
-        //		ClearAllErrors();
-        //		return;
-        //	}
-
-        //	var results = new List<ValidationResult>();
-        //	Validator.TryValidateProperty(propertyValue, new ValidationContext(this) { MemberName = propertyName }, results);
-
-        //	if (results.Count != 0)
-        //	{
-        //		if (!Errors.ContainsKey(propertyName))
-        //			Errors[propertyName] = [];
-
-        //		foreach (var error in results.Select(r => r.ErrorMessage).ToList())
-        //		{
-        //			if (error is null)
-        //				continue;
-
-        //			if (!Errors[propertyName].Contains(error))
-        //			{
-        //				Errors[propertyName].Add(error);
-        //				ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
-        //			}
-        //		}
-        //	}
-        //	else
-        //		ClearErrors(propertyName);
-        //}
-
-        //
-
         private readonly Dictionary<string, List<string>> _errors = [];
 
         public bool HasErrors => _errors.Count != 0;
@@ -169,7 +102,6 @@ namespace SchoolBusWPF.ViewModels
         public ICommand SaveChangesCommand { get; set; }
         public ICommand ClosePopupCommand { get; set; }
         public ICommand UpdateEntityCommand { get; set; }
-        public ICommand DeleteEntityCommand { get; set; }
 
 		public abstract bool CanSaveChanges(object obj);
 

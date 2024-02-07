@@ -2,6 +2,7 @@
 using SCHOOL_BUS.Commands;
 using SchoolBusWPF.Models.Concretes;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace SchoolBusWPF.ViewModels
 {
@@ -30,6 +31,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private string? _name;
+        [Required]
         public string? Name
         {
             get { return _name; }
@@ -42,6 +44,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private DateTime? _startDate;
+        [Required]
         public DateTime? StartDate
         {
             get { return _startDate; }
@@ -49,22 +52,18 @@ namespace SchoolBusWPF.ViewModels
             {
                 _startDate = value;
                 OnPropertyChanged(nameof(StartDate));
-                ValidateStartDate();
-            }
-        }
+                ValidateProperty(nameof(StartDate), value, "Start date is required.");
 
-        private void ValidateStartDate()
-        {
-            ClearErrors(nameof(StartDate));
+				ClearErrors(nameof(StartDate));
+				ClearErrors(nameof(EndDate));
 
-            if (StartDate is null)
-                AddError(nameof(StartDate), "Start date is required.");
-
-            if(StartDate >= EndDate)
-                AddError(nameof(StartDate), "Start date is not valid.");
+				if (StartDate >= EndDate)
+					AddError(nameof(StartDate), "Start date is not valid.");
+			}
         }
 
         private DateTime? _endDate;
+        [Required]
         public DateTime? EndDate
         {
             get { return _endDate; }
@@ -72,19 +71,14 @@ namespace SchoolBusWPF.ViewModels
             {
                 _endDate = value;
                 OnPropertyChanged(nameof(EndDate));
-                ValidateEndDate();
-            }
-        }
+                ValidateProperty(nameof(EndDate), value, "End date is required.");
 
-        private void ValidateEndDate()
-        {
-            ClearErrors(nameof(EndDate));
+                ClearErrors(nameof(EndDate));
+                ClearErrors(nameof(StartDate));
 
-            if (EndDate is null)
-                AddError(nameof(EndDate), "End date is required.");
-
-            if (EndDate <= StartDate)
-                AddError(nameof(EndDate), "End date is not valid.");
+				if (EndDate <= StartDate)
+					AddError(nameof(EndDate), "End date is not valid.");
+			}
         }
 
         public HolidayViewModel()
@@ -95,7 +89,6 @@ namespace SchoolBusWPF.ViewModels
             SaveChangesCommand = new RelayCommand(SaveChanges, CanSaveChanges);
             ClosePopupCommand = new RelayCommand(ClosePopup);
             UpdateEntityCommand = new RelayCommand(UpdateEntity);
-            DeleteEntityCommand = new RelayCommand(DeleteEntity);
         }
 
         public override void OpenPopup(object obj)
@@ -117,8 +110,8 @@ namespace SchoolBusWPF.ViewModels
 
         public override bool CanSaveChanges(object obj)
         {
-            return !HasErrors;
-        }
+			return Validator.TryValidateObject(this, new ValidationContext(this), null) && !HasErrors;
+		}
 
         public override void SaveChanges(object obj)
         {

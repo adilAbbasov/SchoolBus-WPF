@@ -49,7 +49,7 @@
                                     <Button Style="{StaticResource MaterialDesignIconForegroundButton}" Height="30" Width="30" Margin="0 0 5 0" Command="{Binding DataContext.UpdateEntityCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}">
                                         <materialDesign:PackIcon Width="20" Height="20" Kind="SquareEditOutline" Foreground="ForestGreen" />
                                     </Button>
-                                    <Button Style="{StaticResource MaterialDesignIconForegroundButton}" Height="30" Width="30" Command="{Binding DataContext.DeleteEntityCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}">
+                                    <Button Style="{StaticResource MaterialDesignIconForegroundButton}" Height="30" Width="30" Click="DeleteButtonClick">
                                         <materialDesign:PackIcon Width="20" Height="20" Kind="DeleteOutline" Foreground="OrangeRed" />
                                     </Button>
                                 </StackPanel>

@@ -2,6 +2,7 @@
 using SCHOOL_BUS.Commands;
 using SchoolBusWPF.Models.Concretes;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
 
 namespace SchoolBusWPF.ViewModels
@@ -86,6 +87,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private string? _fullName;
+        [Required]
         public string? FullName
         {
             get { return _fullName; }
@@ -121,6 +123,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private Car? _car;
+        [Required]
         public Car? Car
         {
             get { return _car; }
@@ -198,7 +201,6 @@ namespace SchoolBusWPF.ViewModels
             SaveChangesCommand = new RelayCommand(SaveChanges, CanSaveChanges);
             ClosePopupCommand = new RelayCommand(ClosePopup);
             UpdateEntityCommand = new RelayCommand(UpdateEntity);
-            DeleteEntityCommand = new RelayCommand(DeleteEntity);
             OpenStudentPopupCommand = new RelayCommand(OpenStudentPopup);
             SaveStudentChangesCommand = new RelayCommand(SaveStudentChanges, CanSaveStudentChanges);
             CloseStudentPopupCommand = new RelayCommand(CloseStudentPopup);
@@ -227,8 +229,8 @@ namespace SchoolBusWPF.ViewModels
 
         public override bool CanSaveChanges(object obj)
         {
-            return !HasErrors;
-        }
+			return Validator.TryValidateObject(this, new ValidationContext(this), null) && !HasErrors;
+		}
 
         public override void SaveChanges(object obj)
         {

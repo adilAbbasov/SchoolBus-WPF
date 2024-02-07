@@ -2,6 +2,7 @@
 using SCHOOL_BUS.Commands;
 using SchoolBusWPF.Models.Concretes;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace SchoolBusWPF.ViewModels
 {
@@ -30,6 +31,7 @@ namespace SchoolBusWPF.ViewModels
 		}
 
 		private string? _title;
+		[Required]
 		public string? Title
 		{
 			get { return _title; }
@@ -49,7 +51,6 @@ namespace SchoolBusWPF.ViewModels
 			SaveChangesCommand = new RelayCommand(SaveChanges, CanSaveChanges);
 			ClosePopupCommand = new RelayCommand(ClosePopup);
 			UpdateEntityCommand = new RelayCommand(UpdateEntity);
-			DeleteEntityCommand = new RelayCommand(DeleteEntity);
 		}
 
 		public override void OpenPopup(object obj)
@@ -71,8 +72,8 @@ namespace SchoolBusWPF.ViewModels
 
 		public override bool CanSaveChanges(object obj)
 		{
-			return !HasErrors;
-        }
+			return Validator.TryValidateObject(this, new ValidationContext(this), null) && !HasErrors;
+		}
 
 		public override void SaveChanges(object obj)
 		{

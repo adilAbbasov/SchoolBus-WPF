@@ -2,6 +2,7 @@
 using SCHOOL_BUS.Commands;
 using SchoolBusWPF.Models.Concretes;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace SchoolBusWPF.ViewModels
 {
@@ -41,6 +42,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private string? _firstName;
+        [Required]
         public string? FirstName
         {
             get { return _firstName; }
@@ -53,6 +55,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private string? _lastName;
+        [Required]
         public string? LastName
         {
             get { return _lastName; }
@@ -65,6 +68,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private string? _homeAddress;
+        [Required]
         public string? HomeAddress
         {
             get { return _homeAddress; }
@@ -88,6 +92,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private string? _parentUserName;
+        [Required]
         public string? ParentUserName
         {
             get { return _parentUserName; }
@@ -99,7 +104,7 @@ namespace SchoolBusWPF.ViewModels
 
                 var isLoaded = LoadParent(value);
                 if (!isLoaded)
-                    AddError(nameof(ParentUserName), "The username you entered does not match any parent username.");
+                    AddError(nameof(ParentUserName), "The username you entered does not match any parent.");
             }
         }
 
@@ -115,6 +120,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private Group? _group;
+        [Required]
         public Group? Group
         {
             get { return _group; }
@@ -135,7 +141,6 @@ namespace SchoolBusWPF.ViewModels
             SaveChangesCommand = new RelayCommand(SaveChanges, CanSaveChanges);
             ClosePopupCommand = new RelayCommand(ClosePopup);
             UpdateEntityCommand = new RelayCommand(UpdateEntity);
-            DeleteEntityCommand = new RelayCommand(DeleteEntity);
         }
 
         public override void OpenPopup(object obj)
@@ -157,8 +162,8 @@ namespace SchoolBusWPF.ViewModels
 
         public override bool CanSaveChanges(object obj)
         {
-            return !HasErrors;
-        }
+			return Validator.TryValidateObject(this, new ValidationContext(this), null) && !HasErrors;
+		}
 
         public override void SaveChanges(object obj)
         {

@@ -42,6 +42,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private string? _name;
+        [Required]
         public string? Name
         {
             get { return _name; }
@@ -54,6 +55,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private string? _plateNumber;
+        [Required]
         public string? PlateNumber
         {
             get { return _plateNumber; }
@@ -61,21 +63,15 @@ namespace SchoolBusWPF.ViewModels
             {
                 _plateNumber = value;
                 OnPropertyChanged(nameof(PlateNumber));
-                ValidatePlateNumber();
-            }
-        }
+                ValidateProperty(nameof(PlateNumber), value, "Plate number is required.");
 
-        private void ValidatePlateNumber()
-        {
-            ClearErrors(nameof(PlateNumber));
-
-            if (string.IsNullOrEmpty(PlateNumber))
-                AddError(nameof(PlateNumber), "Plate number is required.");
-            else if (PlateNumber.Length < 7)
-                AddError(nameof(PlateNumber), "Plate number is not valid.");
+				if (!string.IsNullOrEmpty(PlateNumber) && PlateNumber.Length < 7)
+					AddError(nameof(PlateNumber), "Plate number is not valid.");
+			}
         }
 
         private string? _seatCount;
+        [Required]
         public string? SeatCount
         {
             get { return _seatCount; }
@@ -88,6 +84,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private Driver? _driver;
+        [Required]
         public Driver? Driver
         {
             get { return _driver; }
@@ -108,7 +105,6 @@ namespace SchoolBusWPF.ViewModels
             SaveChangesCommand = new RelayCommand(SaveChanges, CanSaveChanges);
             ClosePopupCommand = new RelayCommand(ClosePopup);
             UpdateEntityCommand = new RelayCommand(UpdateEntity);
-            DeleteEntityCommand = new RelayCommand(DeleteEntity);
         }
 
         public override void OpenPopup(object obj)
@@ -130,8 +126,8 @@ namespace SchoolBusWPF.ViewModels
 
         public override bool CanSaveChanges(object obj)
         {
-            return !HasErrors;
-        }
+			return Validator.TryValidateObject(this, new ValidationContext(this), null) && !HasErrors;
+		}
 
         public override void SaveChanges(object obj)
         {

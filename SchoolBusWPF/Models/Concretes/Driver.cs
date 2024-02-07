@@ -15,5 +15,6 @@ namespace SchoolBusWPF.Models.Concretes
 		public string? PhoneNumber { get; set; }
 		public string? Licence { get; set; }
 		public Car? Car { get; set; }
+		public virtual IEnumerable<Ride>? Rides { get; set; }
 	}
 }

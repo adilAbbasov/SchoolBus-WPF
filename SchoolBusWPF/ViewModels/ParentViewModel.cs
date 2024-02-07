@@ -3,13 +3,14 @@ using SCHOOL_BUS.Commands;
 using SchoolBusWPF.Models.Concretes;
 using SchoolBusWPF.Services;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 namespace SchoolBusWPF.ViewModels
 {
     public class ParentViewModel : ViewModelBase
     {
-        private Parent _parentData;
+		private Parent _parentData;
         public Parent ParentData
         {
             get { return _parentData; }
@@ -32,6 +33,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private string? _firstName;
+        [Required]
         public string? FirstName
         {
             get { return _firstName; }
@@ -44,6 +46,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private string? _lastName;
+        [Required]
         public string? LastName
         {
             get { return _lastName; }
@@ -56,6 +59,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private string? _userName;
+        [Required]
         public string? UserName
         {
             get { return _userName; }
@@ -68,6 +72,7 @@ namespace SchoolBusWPF.ViewModels
         }
 
         private string? _password;
+        [Required]
         public string? Password
         {
             get { return _password; }
@@ -75,22 +80,15 @@ namespace SchoolBusWPF.ViewModels
             {
                 _password = value;
                 OnPropertyChanged(nameof(Password));
-                ValidatePassword();
-            }
-        }
+				ValidateProperty(nameof(Password), value, "Password is required.");
 
-        private void ValidatePassword()
-        {
-            ClearErrors(nameof(Password));
-            var pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$";
-
-            if (string.IsNullOrEmpty(Password))
-                AddError(nameof(Password), "Password is required.");
-            else if (!Regex.IsMatch(Password, pattern))
-                AddError(nameof(Password), "Password is not valid.");
+				if (!string.IsNullOrEmpty(Password) && !Regex.IsMatch(Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$"))
+					AddError(nameof(Password), "Password is not valid.");
+			}
         }
 
         private string? _phoneNumber;
+        [Required]
         public string? PhoneNumber
         {
             get { return _phoneNumber; }
@@ -98,18 +96,11 @@ namespace SchoolBusWPF.ViewModels
             {
                 _phoneNumber = value;
                 OnPropertyChanged(nameof(PhoneNumber));
-                ValidatePhoneNumber();
-            }
-        }
+				ValidateProperty(nameof(PhoneNumber), value, "Phone number is required.");
 
-        private void ValidatePhoneNumber()
-        {
-            ClearErrors(nameof(PhoneNumber));
-
-            if (string.IsNullOrEmpty(PhoneNumber))
-                AddError(nameof(PhoneNumber), "Phone number is required.");
-            else if (PhoneNumber.Length < 9)
-                AddError(nameof(PhoneNumber), "Phone number is not valid.");
+				if (!string.IsNullOrEmpty(PhoneNumber) && PhoneNumber.Length < 9)
+					AddError(nameof(PhoneNumber), "Phone number is not valid.");
+			}
         }
 
         public ParentViewModel()
@@ -120,7 +111,6 @@ namespace SchoolBusWPF.ViewModels
             SaveChangesCommand = new RelayCommand(SaveChanges, CanSaveChanges);
             ClosePopupCommand = new RelayCommand(ClosePopup);
             UpdateEntityCommand = new RelayCommand(UpdateEntity);
-            DeleteEntityCommand = new RelayCommand(DeleteEntity);
         }
 
         public override void OpenPopup(object obj)
@@ -142,8 +132,8 @@ namespace SchoolBusWPF.ViewModels
 
         public override bool CanSaveChanges(object obj)
         {
-            return !HasErrors;
-        }
+			return Validator.TryValidateObject(this, new ValidationContext(this), null) && !HasErrors;
+		}
 
         public override void SaveChanges(object obj)
         {
