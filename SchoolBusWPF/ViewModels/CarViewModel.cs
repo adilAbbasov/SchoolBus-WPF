@@ -65,9 +65,9 @@ namespace SchoolBusWPF.ViewModels
                 OnPropertyChanged(nameof(PlateNumber));
                 ValidateProperty(nameof(PlateNumber), value, "Plate number is required.");
 
-				if (!string.IsNullOrEmpty(PlateNumber) && PlateNumber.Length < 7)
-					AddError(nameof(PlateNumber), "Plate number is not valid.");
-			}
+                if (!string.IsNullOrEmpty(PlateNumber) && PlateNumber.Length < 7)
+                    AddError(nameof(PlateNumber), "Plate number is not valid.");
+            }
         }
 
         private string? _seatCount;
@@ -126,15 +126,17 @@ namespace SchoolBusWPF.ViewModels
 
         public override bool CanSaveChanges(object obj)
         {
-			return Validator.TryValidateObject(this, new ValidationContext(this), null) && !HasErrors;
-		}
+            return Validator.TryValidateObject(this, new ValidationContext(this), null) && !HasErrors;
+        }
 
         public override void SaveChanges(object obj)
         {
             try
             {
-                if (obj is not Car objAsCar || Driver is null)
+                if (Driver is null)
                     return;
+
+                var objAsCar = (obj as Car)!;
 
                 if (!IsUpdate && CarExists(PlateNumber))
                 {
@@ -156,10 +158,7 @@ namespace SchoolBusWPF.ViewModels
                 }
                 else
                 {
-                    var car = _dbContext.Cars.FirstOrDefault(c => c.Id == objAsCar.Id);
-
-                    if (car is null)
-                        return;
+                    var car = _dbContext.Cars.FirstOrDefault(c => c.Id == objAsCar.Id)!;
 
                     car.Name = Name;
                     car.PlateNumber = $"{PlateNumber?[..2]} {PlateNumber?.Substring(2, 2).ToUpper()} {PlateNumber?.Substring(4, 3)}";
@@ -197,8 +196,7 @@ namespace SchoolBusWPF.ViewModels
 
         public override void UpdateEntity(object obj)
         {
-            if (obj is null || obj is not Car objAsCar)
-                return;
+            var objAsCar = (obj as Car)!;
 
             Name = objAsCar.Name;
             PlateNumber = $"{objAsCar.PlateNumber?[..2]}{objAsCar.PlateNumber?.Substring(3, 2)}{objAsCar.PlateNumber?.Substring(6, 3)}";
@@ -211,22 +209,23 @@ namespace SchoolBusWPF.ViewModels
 
         public override void DeleteEntity(object obj)
         {
-            if (obj is null || obj is not Car objAsCar)
-                return;
-
-            var car = _dbContext.Cars.FirstOrDefault(c => c.Id == objAsCar.Id);
-
-            if (car is null)
-                return;
+            var objAsCar = (obj as Car)!;
+            var car = _dbContext.Cars.FirstOrDefault(c => c.Id == objAsCar.Id)!;
 
             _dbContext.Cars.Remove(car);
             _dbContext.SaveChanges();
+
             Cars = new ObservableCollection<Car>([.. _dbContext.Cars]);
         }
 
         private bool CarExists(string? plateNumber)
         {
             return _dbContext.Cars.Any(c => c.PlateNumber == plateNumber);
+        }
+
+        public void SearchData(string pattern)
+        {
+            Cars = new ObservableCollection<Car>([.. _dbContext.Cars.Where(c => c.Name!.Contains(pattern.ToLower()))]);
         }
     }
 }

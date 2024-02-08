@@ -12,7 +12,7 @@ namespace SchoolBusWPF.Views
             DataContext = new HolidayViewModel();
         }
 
-		private void DeleteButtonClick(object sender, RoutedEventArgs e)
+		private void DeleteButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (sender is null || sender is not Button button)
 				return;

@@ -4,15 +4,15 @@ using System.Windows.Controls;
 
 namespace SchoolBusWPF.Views
 {
-    public partial class Student : Page
+    public partial class StudentView : Page
     {
-        public Student()
+        public StudentView()
         {
             InitializeComponent();
             DataContext = new StudentViewModel();
         }
 
-		private void DeleteButtonClick(object sender, RoutedEventArgs e)
+		private void DeleteButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (sender is null || sender is not Button button)
 				return;

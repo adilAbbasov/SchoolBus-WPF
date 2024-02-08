@@ -1,14 +1,13 @@
 ﻿using SchoolBusWPF.ViewModels;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace SchoolBusWPF.Views
 {
-	public partial class ParentWindow : Page
+    public partial class ParentView : Page
 	{
-		public ParentWindow()
+		public ParentView()
 		{
 			InitializeComponent();
 			DataContext = new ParentViewModel();
@@ -43,7 +42,7 @@ namespace SchoolBusWPF.Views
 			viewModel.Password = passwordBox.Password;
 		}
 
-		private void DeleteButtonClick(object sender, RoutedEventArgs e)
+		private void DeleteButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (sender is null || sender is not Button button)
 				return;

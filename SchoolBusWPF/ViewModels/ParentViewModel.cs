@@ -139,8 +139,7 @@ namespace SchoolBusWPF.ViewModels
         {
             try
             {
-                if (obj is not Parent objAsParent)
-                    return;
+                var objAsParent = (obj as Parent)!;
 
                 if (!IsUpdate && ParentExists(UserName))
                 {
@@ -163,10 +162,7 @@ namespace SchoolBusWPF.ViewModels
                 }
                 else
                 {
-                    var parent = _dbContext.Parents.FirstOrDefault(p => p.Id == objAsParent.Id);
-
-                    if (parent is null)
-                        return;
+                    var parent = _dbContext.Parents.FirstOrDefault(p => p.Id == objAsParent.Id)!;
 
                     parent.FirstName = FirstName;
                     parent.LastName = LastName;
@@ -206,8 +202,7 @@ namespace SchoolBusWPF.ViewModels
 
         public override void UpdateEntity(object obj)
         {
-            if (obj is null || obj is not Parent objAsParent)
-                return;
+            var objAsParent = (obj as Parent)!;
 
             FirstName = objAsParent.FirstName;
             LastName = objAsParent.LastName;
@@ -221,22 +216,23 @@ namespace SchoolBusWPF.ViewModels
 
         public override void DeleteEntity(object obj)
         {
-            if (obj is null || obj is not Parent objAsParent)
-                return;
-
-            var parent = _dbContext.Parents.FirstOrDefault(p => p.Id == objAsParent.Id);
-
-            if (parent is null)
-                return;
+            var objAsParent = (obj as Parent)!;
+            var parent = _dbContext.Parents.FirstOrDefault(p => p.Id == objAsParent.Id)!;
 
             _dbContext.Parents.Remove(parent);
             _dbContext.SaveChanges();
+
             Parents = new ObservableCollection<Parent>([.. _dbContext.Parents]);
         }
 
         private bool ParentExists(string? username)
         {
             return _dbContext.Parents.Any(p => p.UserName == username);
+        }
+
+        public void SearchData(string pattern)
+        {
+            Parents = new ObservableCollection<Parent>([.. _dbContext.Parents.Where(p => p.FirstName!.Contains(pattern.ToLower()) || p.LastName!.Contains(pattern.ToLower()))]);
         }
     }
 }

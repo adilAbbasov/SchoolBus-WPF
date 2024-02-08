@@ -10,7 +10,7 @@ namespace SchoolBusWPF.ViewModels
 {
     public partial class DriverViewModel : ViewModelBase
     {
-		private Driver _driverData;
+        private Driver _driverData;
         public Driver DriverData
         {
             get { return _driverData; }
@@ -93,8 +93,8 @@ namespace SchoolBusWPF.ViewModels
                 OnPropertyChanged(nameof(Password));
                 ValidateProperty(nameof(Password), value, "Password is required.");
 
-				if (!string.IsNullOrEmpty(Password) && !Regex.IsMatch(Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$"))
-					AddError(nameof(Password), "Password is not valid.");
+                if (!string.IsNullOrEmpty(Password) && !Regex.IsMatch(Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$"))
+                    AddError(nameof(Password), "Password is not valid.");
             }
         }
 
@@ -109,8 +109,8 @@ namespace SchoolBusWPF.ViewModels
                 OnPropertyChanged(nameof(PhoneNumber));
                 ValidateProperty(nameof(PhoneNumber), value, "Phone number is required.");
 
-				if (!string.IsNullOrEmpty(PhoneNumber) && PhoneNumber.Length < 9)
-					AddError(nameof(PhoneNumber), "Phone number is not valid.");
+                if (!string.IsNullOrEmpty(PhoneNumber) && PhoneNumber.Length < 9)
+                    AddError(nameof(PhoneNumber), "Phone number is not valid.");
             }
         }
 
@@ -170,15 +170,17 @@ namespace SchoolBusWPF.ViewModels
 
         public override bool CanSaveChanges(object obj)
         {
-			return Validator.TryValidateObject(this, new ValidationContext(this), null) && !HasErrors;
-		}
+            return Validator.TryValidateObject(this, new ValidationContext(this), null) && !HasErrors;
+        }
 
         public override void SaveChanges(object obj)
         {
             try
             {
-                if (obj is not Driver objAsDriver || Car is null)
+                if (Car is null)
                     return;
+
+                var objAsDriver = (obj as Driver)!;
 
                 if (!IsUpdate && DriverExists(UserName))
                 {
@@ -203,10 +205,7 @@ namespace SchoolBusWPF.ViewModels
                 }
                 else
                 {
-                    var driver = _dbContext.Drivers.FirstOrDefault(d => d.Id == objAsDriver.Id);
-
-                    if (driver is null)
-                        return;
+                    var driver = _dbContext.Drivers.FirstOrDefault(d => d.Id == objAsDriver.Id)!;
 
                     driver.FirstName = FirstName;
                     driver.LastName = LastName;
@@ -250,8 +249,7 @@ namespace SchoolBusWPF.ViewModels
 
         public override void UpdateEntity(object obj)
         {
-            if (obj is null || obj is not Driver objAsDriver)
-                return;
+            var objAsDriver = (obj as Driver)!;
 
             FirstName = objAsDriver.FirstName;
             LastName = objAsDriver.LastName;
@@ -267,22 +265,23 @@ namespace SchoolBusWPF.ViewModels
 
         public override void DeleteEntity(object obj)
         {
-            if (obj is null || obj is not Driver objAsDriver)
-                return;
-
-            var driver = _dbContext.Drivers.FirstOrDefault(d => d.Id == objAsDriver.Id);
-
-            if (driver is null)
-                return;
+            var objAsDriver = (obj as Driver)!;
+            var driver = _dbContext.Drivers.FirstOrDefault(d => d.Id == objAsDriver.Id)!;
 
             _dbContext.Drivers.Remove(driver);
             _dbContext.SaveChanges();
+
             Drivers = new ObservableCollection<Driver>([.. _dbContext.Drivers]);
         }
 
         private bool DriverExists(string? username)
         {
             return _dbContext.Drivers.Any(d => d.UserName == username);
-        }		
-	}
+        }
+
+        public void SearchData(string pattern)
+        {
+            Drivers = new ObservableCollection<Driver>([.. _dbContext.Drivers.Where(d => d.FirstName!.Contains(pattern.ToLower()) || d.LastName!.Contains(pattern.ToLower()))]);
+        }
+    }
 }

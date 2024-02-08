@@ -69,7 +69,7 @@ namespace SchoolBusWPF.Views
 			return key >= Key.A && key <= Key.Z ? (char)('a' + (key - Key.A)) : '\0';
 		}
 
-		private void DeleteButtonClick(object sender, RoutedEventArgs e)
+		private void DeleteButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (sender is null || sender is not Button button)
 				return;

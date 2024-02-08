@@ -190,9 +190,7 @@ namespace SchoolBusWPF.ViewModels
 
         public RideViewModel()
         {
-            Rides = new ObservableCollection<Ride>([.. _dbContext.Rides.Include(r => r.Car).Include(r => r != null ? r.Driver : null)]);
-           
-
+            Rides = new ObservableCollection<Ride>([.. _dbContext.Rides.Include(r => r.Car).Include(r => r.Driver)]);
             Cars = new ObservableCollection<Car>([.. _dbContext.Cars]);
             Students = new ObservableCollection<Student>([.. _dbContext.Students.Include(s => s.Group).Where(s => s.RideId == null)]);
             IsToggleChecked = false;
@@ -229,15 +227,17 @@ namespace SchoolBusWPF.ViewModels
 
         public override bool CanSaveChanges(object obj)
         {
-			return Validator.TryValidateObject(this, new ValidationContext(this), null) && !HasErrors;
-		}
+            return Validator.TryValidateObject(this, new ValidationContext(this), null) && !HasErrors;
+        }
 
         public override void SaveChanges(object obj)
         {
             try
             {
-                if (obj is not Ride objAsRide || Car is null || Driver is null)
+                if (Car is null || Driver is null)
                     return;
+
+                var objAsRide = (obj as Ride)!;
 
                 if (objAsRide.Id == 0)
                 {
@@ -253,10 +253,7 @@ namespace SchoolBusWPF.ViewModels
                 }
                 else
                 {
-                    var ride = _dbContext.Rides.FirstOrDefault(r => r.Id == objAsRide.Id);
-
-                    if (ride is null)
-                        return;
+                    var ride = _dbContext.Rides.FirstOrDefault(r => r.Id == objAsRide.Id)!;
 
                     ride.FullName = FullName;
                     ride.Type = Type;
@@ -292,9 +289,8 @@ namespace SchoolBusWPF.ViewModels
 
         public override void UpdateEntity(object obj)
         {
-            if (obj is null || obj is not Ride objAsRide)
-                return;
-
+            var objAsRide = (obj as Ride)!;
+       
             FullName = objAsRide.FullName;
             IsToggleChecked = objAsRide.Type != "Home";
             Car = objAsRide.Car;
@@ -304,16 +300,12 @@ namespace SchoolBusWPF.ViewModels
 
         public override void DeleteEntity(object obj)
         {
-            if (obj is null || obj is not Ride objAsRide)
-                return;
-
-            var ride = _dbContext.Rides.FirstOrDefault(r => r.Id == objAsRide.Id);
-
-            if (ride is null)
-                return;
+            var objAsRide = (obj as Ride)!;
+            var ride = _dbContext.Rides.FirstOrDefault(r => r.Id == objAsRide.Id)!;
 
             _dbContext.Rides.Remove(ride);
             _dbContext.SaveChanges();
+
             Rides = new ObservableCollection<Ride>([.. _dbContext.Rides]);
         }
 
@@ -322,8 +314,7 @@ namespace SchoolBusWPF.ViewModels
 
         public void OpenStudentPopup(object obj)
         {
-            if (obj is null || obj is not Ride objAsRide)
-                return;
+            var objAsRide = (obj as Ride)!;
 
             RideId = objAsRide.Id;
             MaxSeatCount = objAsRide.Car?.SeatCount;
@@ -335,9 +326,7 @@ namespace SchoolBusWPF.ViewModels
 
         public int ModifyStudent(object obj)
         {
-            if (obj is null || obj is not Student objAsStudent)
-                throw new Exception();
-
+            var objAsStudent = (obj as Student)!;
             var isContain = SelectedStudents.Contains(objAsStudent);
 
             if (!isContain)
@@ -386,8 +375,7 @@ namespace SchoolBusWPF.ViewModels
 
         public void OpenInfoPopup(object obj)
         {
-            if (obj is null || obj is not Ride objAsRide)
-                return;
+            var objAsRide = (obj as Ride)!;
 
             RideId = objAsRide.Id;
             Students = new ObservableCollection<Student>([.. _dbContext.Students.Include(s => s.Group).Where(s => s.RideId == RideId)]);
@@ -398,8 +386,7 @@ namespace SchoolBusWPF.ViewModels
 
         public void RemoveStudent(object obj)
         {
-            if (obj is null || obj is not Student objAsStudent)
-                return;
+            var objAsStudent = (obj as Student)!;
 
             Students.Remove(objAsStudent);
             SelectedStudentCount--;
@@ -434,6 +421,11 @@ namespace SchoolBusWPF.ViewModels
                 Driver = _dbContext.Cars.Include(c => c.Driver).FirstOrDefault(c => c.Id == Car.Id)?.Driver;
             else
                 Driver = null;
+        }
+
+        public void SearchData(string pattern)
+        {
+            Rides = new ObservableCollection<Ride>([.. _dbContext.Rides.Include(r => r.Car).Include(r => r.Driver).Where(r => r.FullName!.Contains(pattern.ToLower()))]);
         }
     }
 }

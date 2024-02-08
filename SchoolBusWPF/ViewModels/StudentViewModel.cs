@@ -134,7 +134,7 @@ namespace SchoolBusWPF.ViewModels
 
         public StudentViewModel()
         {
-            Students = new ObservableCollection<Student>([.. _dbContext.Students.Include(s => s.Parent).Include(s => s.Group)]);
+            Students = new ObservableCollection<Student>([.. _dbContext.Students.Include(s => s.Group).Include(s => s.Parent)]);
             Groups = new ObservableCollection<Group>([.. _dbContext.Groups]);
 
             OpenPopupCommand = new RelayCommand(OpenPopup);
@@ -169,8 +169,10 @@ namespace SchoolBusWPF.ViewModels
         {
             try
             {
-                if (obj is not Student objAsStudent || Parent is null || Group is null)
+                if (Group is null || Parent is null)
                     return;
+
+                var objAsStudent = (obj as Student)!;
 
                 if (objAsStudent.Id == 0)
                 {
@@ -188,10 +190,7 @@ namespace SchoolBusWPF.ViewModels
                 }
                 else
                 {
-                    var student = _dbContext.Students.FirstOrDefault(s => s.Id == objAsStudent.Id);
-
-                    if (student is null)
-                        return;
+                    var student = _dbContext.Students.FirstOrDefault(s => s.Id == objAsStudent.Id)!;
 
                     student.FirstName = FirstName;
                     student.LastName = LastName;
@@ -232,8 +231,7 @@ namespace SchoolBusWPF.ViewModels
 
         public override void UpdateEntity(object obj)
         {
-            if (obj is null || obj is not Student objAsStudent)
-                return;
+            var objAsStudent = (obj as Student)!;
 
             FirstName = objAsStudent.FirstName;
             LastName = objAsStudent.LastName;
@@ -247,16 +245,12 @@ namespace SchoolBusWPF.ViewModels
 
         public override void DeleteEntity(object obj)
         {
-            if (obj is null || obj is not Student objAsStudent)
-                return;
-
-            var student = _dbContext.Students.FirstOrDefault(s => s.Id == objAsStudent.Id);
-
-            if (student is null)
-                return;
+            var objAsStudent = (obj as Student)!;
+            var student = _dbContext.Students.FirstOrDefault(s => s.Id == objAsStudent.Id)!;
 
             _dbContext.Students.Remove(student);
             _dbContext.SaveChanges();
+
             Students = new ObservableCollection<Student>([.. _dbContext.Students]);
         }
 
@@ -273,6 +267,11 @@ namespace SchoolBusWPF.ViewModels
                 Parent = null;
 
             return true;
+        }
+
+        public void SearchData(string pattern)
+        {
+            Students = new ObservableCollection<Student>([.. _dbContext.Students.Include(s => s.Group).Include(s => s.Parent).Where(s => s.FirstName!.Contains(pattern.ToLower()) || s.LastName!.Contains(pattern.ToLower()))]);
         }
     }
 }

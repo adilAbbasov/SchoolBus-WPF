@@ -45,7 +45,7 @@
                             <materialDesign:PackIcon Kind="Search" Foreground="Orange" />
                         </Button>
 
-                        <TextBox x:Name="searchTxtBx" Width="350" FontSize="14" VerticalAlignment="Center" materialDesign:HintAssist.Hint="Search" materialDesign:TextFieldAssist.UnderlineBrush="Orange" CaretBrush="Black" />
+                        <TextBox x:Name="searchTxtBx" Width="350" FontSize="14" VerticalAlignment="Center" materialDesign:HintAssist.Hint="Search" materialDesign:TextFieldAssist.UnderlineBrush="Orange" CaretBrush="Black" TextChanged="SearchTxtBx_TextChanged" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">

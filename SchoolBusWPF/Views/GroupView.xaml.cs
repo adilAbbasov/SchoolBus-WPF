@@ -4,15 +4,15 @@ using System.Windows.Controls;
 
 namespace SchoolBusWPF.Views
 {
-	public partial class Group : Page
+	public partial class GroupView : Page
     {
-        public Group()
+        public GroupView()
         {
             InitializeComponent();
             DataContext = new GroupViewModel();
         }
 
-		private void DeleteButtonClick(object sender, RoutedEventArgs e)
+		private void DeleteButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (sender is null || sender is not Button button)
 				return;

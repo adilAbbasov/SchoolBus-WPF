@@ -79,8 +79,7 @@ namespace SchoolBusWPF.ViewModels
 		{
 			try
 			{
-                if (obj is not Group objAsGroup)
-                    return;
+                var objAsGroup = (obj as Group)!;
 
                 if (!IsUpdate && GroupExists(Title))
 				{
@@ -99,10 +98,7 @@ namespace SchoolBusWPF.ViewModels
 				}
 				else
 				{
-					var group = _dbContext.Groups.FirstOrDefault(g => g.Id == objAsGroup.Id);
-
-					if (group is null)
-						return;
+					var group = _dbContext.Groups.FirstOrDefault(g => g.Id == objAsGroup.Id)!;
 
 					group.Title = Title;
 
@@ -125,17 +121,18 @@ namespace SchoolBusWPF.ViewModels
 		public override void ClosePopup(object obj)
 		{
 			IsPopupOpen = false;
+
 			Title = string.Empty;
+
             IsUpdate = false;
 			ClearAllErrors();
         }
 
 		public override void UpdateEntity(object obj)
 		{
-			if (obj is null || obj is not Group objAsGroup)
-				return;
+            var objAsGroup = (obj as Group)!;
 
-			Title = objAsGroup.Title;
+            Title = objAsGroup.Title;
 
             IsUpdate = true;
             OpenPopup(obj);
@@ -143,16 +140,12 @@ namespace SchoolBusWPF.ViewModels
 
 		public override void DeleteEntity(object obj)
 		{
-			if (obj is null || obj is not Group objAsGroup)
-				return;
-
-			var group = _dbContext.Groups.FirstOrDefault(g => g.Id == objAsGroup.Id);
-
-			if (group is null)
-				return;
+            var objAsGroup = (obj as Group)!;
+            var group = _dbContext.Groups.FirstOrDefault(g => g.Id == objAsGroup.Id)!;
 
 			_dbContext.Groups.Remove(group);
 			_dbContext.SaveChanges();
+
 			Groups = new ObservableCollection<Group>([.. _dbContext.Groups]);
 		}
 
@@ -160,5 +153,10 @@ namespace SchoolBusWPF.ViewModels
 		{
 			return _dbContext.Groups.Any(g => g.Title == title);
 		}
-	}
+
+        public void SearchData(string pattern)
+        {
+            Groups = new ObservableCollection<Group>([.. _dbContext.Groups.Where(g => g.Title!.Contains(pattern.ToLower()))]);
+        }
+    }
 }

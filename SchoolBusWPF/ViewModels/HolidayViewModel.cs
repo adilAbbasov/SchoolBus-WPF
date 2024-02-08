@@ -54,12 +54,12 @@ namespace SchoolBusWPF.ViewModels
                 OnPropertyChanged(nameof(StartDate));
                 ValidateProperty(nameof(StartDate), value, "Start date is required.");
 
-				ClearErrors(nameof(StartDate));
-				ClearErrors(nameof(EndDate));
+                ClearErrors(nameof(StartDate));
+                ClearErrors(nameof(EndDate));
 
-				if (StartDate >= EndDate)
-					AddError(nameof(StartDate), "Start date is not valid.");
-			}
+                if (StartDate >= EndDate)
+                    AddError(nameof(StartDate), "Start date is not valid.");
+            }
         }
 
         private DateTime? _endDate;
@@ -76,9 +76,9 @@ namespace SchoolBusWPF.ViewModels
                 ClearErrors(nameof(EndDate));
                 ClearErrors(nameof(StartDate));
 
-				if (EndDate <= StartDate)
-					AddError(nameof(EndDate), "End date is not valid.");
-			}
+                if (EndDate <= StartDate)
+                    AddError(nameof(EndDate), "End date is not valid.");
+            }
         }
 
         public HolidayViewModel()
@@ -110,15 +110,14 @@ namespace SchoolBusWPF.ViewModels
 
         public override bool CanSaveChanges(object obj)
         {
-			return Validator.TryValidateObject(this, new ValidationContext(this), null) && !HasErrors;
-		}
+            return Validator.TryValidateObject(this, new ValidationContext(this), null) && !HasErrors;
+        }
 
         public override void SaveChanges(object obj)
         {
             try
             {
-                if (obj is not Holiday objAsHoliday)
-                    return;
+                var objAsHoliday = (obj as Holiday)!;
 
                 if (!IsUpdate && HolidayExists(Name))
                 {
@@ -139,10 +138,7 @@ namespace SchoolBusWPF.ViewModels
                 }
                 else
                 {
-                    var holiday = _dbContext.Holidays.FirstOrDefault(h => h.Id == objAsHoliday.Id);
-
-                    if (holiday is null)
-                        return;
+                    var holiday = _dbContext.Holidays.FirstOrDefault(h => h.Id == objAsHoliday.Id)!;
 
                     holiday.Name = Name;
                     holiday.StartDate = DateOnly.FromDateTime(StartDate ?? new DateTime());
@@ -178,8 +174,7 @@ namespace SchoolBusWPF.ViewModels
 
         public override void UpdateEntity(object obj)
         {
-            if (obj is null || obj is not Holiday objAsHoliday)
-                return;
+            var objAsHoliday = (obj as Holiday)!;
 
             Name = objAsHoliday.Name;
             StartDate = objAsHoliday.StartDate.HasValue ? objAsHoliday.StartDate.Value.ToDateTime(new TimeOnly(0, 0)) : null;
@@ -191,22 +186,23 @@ namespace SchoolBusWPF.ViewModels
 
         public override void DeleteEntity(object obj)
         {
-            if (obj is null || obj is not Holiday objAsHoliday)
-                return;
-
-            var holiday = _dbContext.Holidays.FirstOrDefault(h => h.Id == objAsHoliday.Id);
-
-            if (holiday is null)
-                return;
+            var objAsHoliday = (obj as Holiday)!;
+            var holiday = _dbContext.Holidays.FirstOrDefault(h => h.Id == objAsHoliday.Id)!;
 
             _dbContext.Holidays.Remove(holiday);
             _dbContext.SaveChanges();
+
             Holidays = new ObservableCollection<Holiday>([.. _dbContext.Holidays]);
         }
 
         private bool HolidayExists(string? name)
         {
             return _dbContext.Holidays.Any(h => h.Name == name);
+        }
+
+        public void SearchData(string pattern)
+        {
+            Holidays = new ObservableCollection<Holiday>([.. _dbContext.Holidays.Where(h => h.Name!.Contains(pattern.ToLower()))]);
         }
     }
 }

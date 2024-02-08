@@ -5,9 +5,9 @@ using System.Windows.Input;
 
 namespace SchoolBusWPF.Views
 {
-	public partial class Driver : Page
+	public partial class DriverView : Page
     {
-        public Driver()
+        public DriverView()
         {
             InitializeComponent();
 			DataContext = new DriverViewModel();
@@ -43,7 +43,7 @@ namespace SchoolBusWPF.Views
 			viewModel.Password = passwordBox.Password;
 		}
 
-		private void DeleteButtonClick(object sender, RoutedEventArgs e)
+		private void DeleteButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (sender is null || sender is not Button button)
 				return;
