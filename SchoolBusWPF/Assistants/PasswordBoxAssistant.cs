@@ -16,12 +16,12 @@ namespace SchoolBusWPF.Assistants
 
         private static void OnBoundPasswordChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            PasswordBox box = d as PasswordBox;
-
             if (d == null || !GetBindPassword(d))
             {
                 return;
             }
+
+            PasswordBox box = (d as PasswordBox)!;
 
             box.PasswordChanged -= HandlePasswordChanged;
 
@@ -37,12 +37,7 @@ namespace SchoolBusWPF.Assistants
 
         private static void OnBindPasswordChanged(DependencyObject dp, DependencyPropertyChangedEventArgs e)
         {
-            PasswordBox box = dp as PasswordBox;
-
-            if (box == null)
-            {
-                return;
-            }
+            PasswordBox box = (dp as PasswordBox)!;
 
             bool wasBound = (bool)(e.OldValue);
             bool needToBind = (bool)(e.NewValue);
@@ -60,7 +55,7 @@ namespace SchoolBusWPF.Assistants
 
         private static void HandlePasswordChanged(object sender, RoutedEventArgs e)
         {
-            PasswordBox box = sender as PasswordBox;
+            PasswordBox box = (sender as PasswordBox)!;
 
             SetUpdatingPassword(box, true);
             SetBoundPassword(box, box.Password);

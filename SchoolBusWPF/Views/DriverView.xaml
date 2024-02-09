@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:local="clr-namespace:SchoolBusWPF.Views"
+        xmlns:local="clr-namespace:SchoolBusWPF.Assistants"
         mc:Ignorable="d"
         d:DesignHeight="450" d:DesignWidth="800"
-        Title="Driver">
+        Title="Drivers">
+    
     <Grid x:Name="rootGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="80"></RowDefinition>
@@ -28,7 +29,7 @@
                             <TextBox Style="{StaticResource TextBox}" materialDesign:HintAssist.Hint="First name" Margin="0 0 0 15" Text="{Binding FirstName}" />
                             <TextBox Style="{StaticResource TextBox}" materialDesign:HintAssist.Hint="Last name" Margin="0 0 0 15" Text="{Binding LastName}" />
                             <TextBox Style="{StaticResource TextBox}" materialDesign:HintAssist.Hint="User name" Margin="0 0 0 15" Text="{Binding UserName}" />
-                            <PasswordBox Style="{StaticResource PasswordBox}" materialDesign:HintAssist.Hint="Password" PasswordChanged="PasswordBox_PasswordChanged" Margin="0 0 0 15" />
+                            <PasswordBox Style="{StaticResource PasswordBox}" materialDesign:HintAssist.Hint="Password" Margin="0 0 0 15" local:PasswordBoxAssistant.BindPassword="True" local:PasswordBoxAssistant.BoundPassword="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <TextBox Style="{StaticResource TextBox}" materialDesign:HintAssist.Hint="Phone number" Text="{Binding PhoneNumber}" PreviewKeyDown="PhoneTextBox_PreviewKeyDown" Margin="0 0 0 15" />
                             <TextBox Style="{StaticResource TextBox}" materialDesign:HintAssist.Hint="Licence" Margin="0 0 0 15" Text="{Binding Licence}" />
                             <ComboBox Style="{StaticResource ComboBox}" ItemsSource="{Binding Cars}" DisplayMemberPath="PlateNumber" SelectedItem="{Binding Car}" />

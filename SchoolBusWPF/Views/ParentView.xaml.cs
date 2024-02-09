@@ -35,30 +35,18 @@ namespace SchoolBusWPF.Views
 			}
 		}
 
-		private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
-		{
-			var passwordBox = sender as PasswordBox;
-			var viewModel = DataContext as ParentViewModel;
-			viewModel.Password = passwordBox.Password;
-		}
-
 		private void DeleteButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (sender is null || sender is not Button button)
-				return;
+            var result = MessageBox.Show("Are you sure you want to delete this data?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
-			var result = MessageBox.Show("Are you sure you want to delete this data?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.No)
+                return;
 
-			if (result == MessageBoxResult.Yes)
-			{
-				var viewModel = DataContext as ParentViewModel;
-				var context = button.DataContext;
+            var button = (sender as Button)!;
+            var context = button.DataContext!;
+            var viewModel = (DataContext as ParentViewModel)!;
 
-				if (viewModel is null || context is null)
-					return;
-
-				viewModel.DeleteEntity(context);
-			}
-		}
+            viewModel.DeleteEntity(context);
+        }
 	}
 }

@@ -5,61 +5,48 @@ using System.Windows.Input;
 
 namespace SchoolBusWPF.Views
 {
-	public partial class DriverView : Page
+    public partial class DriverView : Page
     {
         public DriverView()
         {
             InitializeComponent();
-			DataContext = new DriverViewModel();
+            DataContext = new DriverViewModel();
         }
 
-		private static bool IsAllowedKey(Key key)
-		{
-			return (key >= Key.D0 && key <= Key.D9) || (key >= Key.NumPad0 && key <= Key.NumPad9) || key == Key.Back || key == Key.Delete || key == Key.Left || key == Key.Right;
-		}
+        private static bool IsAllowedKey(Key key)
+        {
+            return (key >= Key.D0 && key <= Key.D9) || (key >= Key.NumPad0 && key <= Key.NumPad9) || key == Key.Back || key == Key.Delete || key == Key.Left || key == Key.Right;
+        }
 
-		private void PhoneTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
-		{
-			TextBox textBox = (TextBox)sender;
+        private void PhoneTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
 
-			if (!IsAllowedKey(e.Key))
-			{
-				e.Handled = true;
-				return;
-			}
+            if (!IsAllowedKey(e.Key))
+            {
+                e.Handled = true;
+                return;
+            }
 
-			if (textBox.Text.Length == 9 && (e.Key != Key.Back && e.Key != Key.Delete && e.Key != Key.Left && e.Key != Key.Right))
-			{
-				e.Handled = true;
-				return;
-			}
-		}
+            if (textBox.Text.Length == 9 && (e.Key != Key.Back && e.Key != Key.Delete && e.Key != Key.Left && e.Key != Key.Right))
+            {
+                e.Handled = true;
+                return;
+            }
+        }
 
-		private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
-		{
-			var passwordBox = sender as PasswordBox;
-			var viewModel = DataContext as DriverViewModel;
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show("Are you sure you want to delete this data?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
-			viewModel.Password = passwordBox.Password;
-		}
+            if (result == MessageBoxResult.No)
+                return;
 
-		private void DeleteButton_Click(object sender, RoutedEventArgs e)
-		{
-			if (sender is null || sender is not Button button)
-				return;
+            var button = (sender as Button)!;
+            var context = button.DataContext!;
+            var viewModel = (DataContext as DriverViewModel)!;
 
-			var result = MessageBox.Show("Are you sure you want to delete this data?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-			if (result == MessageBoxResult.Yes)
-			{
-				var viewModel = DataContext as DriverViewModel;
-				var context = button.DataContext;
-
-				if (viewModel is null || context is null)
-					return;
-
-				viewModel.DeleteEntity(context);
-			}
-		}
-	}
+            viewModel.DeleteEntity(context);
+        }
+    }
 }

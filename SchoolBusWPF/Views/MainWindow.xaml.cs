@@ -36,29 +36,9 @@ namespace SchoolBusWPF
             this.userImage.Source = userImage;
         }
 
-        private void Rides_Click(object sender, RoutedEventArgs e)
+        private void Attendances_Click(object sender, RoutedEventArgs e)
         {
-            mainFrame.Navigate(new Uri("Views/RideView.xaml", UriKind.Relative));
-        }
-
-        private void Groups_Click(object sender, RoutedEventArgs e)
-        {
-            mainFrame.Navigate(new Uri("Views/GroupView.xaml", UriKind.Relative));
-        }
-
-        private void Students_Click(object sender, RoutedEventArgs e)
-        {
-            mainFrame.Navigate(new Uri("Views/StudentView.xaml", UriKind.Relative));
-        }
-
-        private void Parents_Click(object sender, RoutedEventArgs e)
-        {
-            mainFrame.Navigate(new Uri("Views/ParentView.xaml", UriKind.Relative));
-        }
-
-        private void Drivers_Click(object sender, RoutedEventArgs e)
-        {
-            mainFrame.Navigate(new Uri("Views/DriverView.xaml", UriKind.Relative));
+            mainFrame.Navigate(new Uri("Views/AttendanceView.xaml", UriKind.Relative));
         }
 
         private void Cars_Click(object sender, RoutedEventArgs e)
@@ -66,9 +46,34 @@ namespace SchoolBusWPF
             mainFrame.Navigate(new Uri("Views/CarView.xaml", UriKind.Relative));
         }
 
+        private void Drivers_Click(object sender, RoutedEventArgs e)
+        {
+            mainFrame.Navigate(new Uri("Views/DriverView.xaml", UriKind.Relative));
+        }
+
+        private void Groups_Click(object sender, RoutedEventArgs e)
+        {
+            mainFrame.Navigate(new Uri("Views/GroupView.xaml", UriKind.Relative));
+        }
+
         private void Holidays_Click(object sender, RoutedEventArgs e)
         {
             mainFrame.Navigate(new Uri("Views/HolidayView.xaml", UriKind.Relative));
+        }
+
+        private void Parents_Click(object sender, RoutedEventArgs e)
+        {
+            mainFrame.Navigate(new Uri("Views/ParentView.xaml", UriKind.Relative));
+        }
+
+        private void Rides_Click(object sender, RoutedEventArgs e)
+        {
+            mainFrame.Navigate(new Uri("Views/RideView.xaml", UriKind.Relative));
+        }
+
+        private void Students_Click(object sender, RoutedEventArgs e)
+        {
+            mainFrame.Navigate(new Uri("Views/StudentView.xaml", UriKind.Relative));
         }
 
         private void SearchTxtBx_TextChanged(object sender, TextChangedEventArgs e)

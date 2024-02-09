@@ -3,13 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SchoolBusWPF"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="MainWindow" WindowState="Maximized" Height="450" Width="800">
+        Title="School Bus" WindowState="Maximized" Height="450" Width="800">
+    
     <Grid x:Name="rootGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"></ColumnDefinition>
+            <ColumnDefinition Width="160"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
@@ -17,12 +17,13 @@
             <StackPanel Grid.Column="0" Margin="20 20 20 0">
                 <Image x:Name="schoolImage" HorizontalAlignment="Left" Width="120" Margin="0 0 0 20" VerticalAlignment="Top" />
 
+                <Button x:Name="Attendances" Style="{StaticResource NavigationButton}" Click="Attendances_Click" Content="Attendances" />
                 <Button x:Name="Rides" Style="{StaticResource NavigationButton}" Click="Rides_Click" Content="Rides" />
-                <Button x:Name="Groups" Style="{StaticResource NavigationButton}" Click="Groups_Click" Content="Groups" />
                 <Button x:Name="Students" Style="{StaticResource NavigationButton}" Click="Students_Click" Content="Students" />
                 <Button x:Name="Parents" Style="{StaticResource NavigationButton}" Click="Parents_Click" Content="Parents" />
-                <Button x:Name="Drivers" Style="{StaticResource NavigationButton}" Click="Drivers_Click" Content="Drivers" />
+                <Button x:Name="Groups" Style="{StaticResource NavigationButton}" Click="Groups_Click" Content="Groups" />
                 <Button x:Name="Cars" Style="{StaticResource NavigationButton}" Click="Cars_Click" Content="Cars" />
+                <Button x:Name="Drivers" Style="{StaticResource NavigationButton}" Click="Drivers_Click" Content="Drivers" />
                 <Button x:Name="Holidays" Style="{StaticResource NavigationButton}" Click="Holidays_Click" Content="Holidays" />
             </StackPanel>
         </Border>

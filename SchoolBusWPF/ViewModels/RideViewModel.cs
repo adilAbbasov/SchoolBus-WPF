@@ -290,7 +290,7 @@ namespace SchoolBusWPF.ViewModels
         public override void UpdateEntity(object obj)
         {
             var objAsRide = (obj as Ride)!;
-       
+
             FullName = objAsRide.FullName;
             IsToggleChecked = objAsRide.Type != "Home";
             Car = objAsRide.Car;
@@ -324,7 +324,7 @@ namespace SchoolBusWPF.ViewModels
             IsStudentPopupOpen = true;
         }
 
-        public int ModifyStudent(object obj)
+        public int UpdateStudent(object obj)
         {
             var objAsStudent = (obj as Student)!;
             var isContain = SelectedStudents.Contains(objAsStudent);
@@ -423,9 +423,52 @@ namespace SchoolBusWPF.ViewModels
                 Driver = null;
         }
 
+
+        //
+
         public void SearchData(string pattern)
         {
             Rides = new ObservableCollection<Ride>([.. _dbContext.Rides.Include(r => r.Car).Include(r => r.Driver).Where(r => r.FullName!.Contains(pattern.ToLower()))]);
+        }
+
+        public bool CanStartRide()
+        {
+            var holidays = _dbContext.Holidays.ToList();
+            var today = DateOnly.FromDateTime(DateTime.Today);
+
+            foreach (var holiday in holidays)
+            {
+                if (today >= holiday.StartDate && today <= holiday.EndDate)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public void StartRide(object obj)
+        {
+            var objAsRide = (obj as Ride)!;
+            var attendances = new List<Attendance>();
+            var students = _dbContext.Students.Where(s => s.RideId == objAsRide.Id).ToList();
+
+            foreach (var student in students) 
+            {
+                var attendance = new Attendance()
+                {
+                    Destination = objAsRide.Type,
+                    Date = DateTime.Now,
+                    StudentId = student.Id
+                };
+
+                attendances.Add(attendance);
+            }
+
+            _dbContext.Attendances.AddRange(attendances);
+            _dbContext.SaveChanges();
+         
+            DeleteEntity(obj);
         }
     }
 }

@@ -4,12 +4,12 @@ using System.Windows.Controls;
 
 namespace SchoolBusWPF.Views
 {
-    public partial class StudentView : Page
+    public partial class AttendanceView : Page
     {
-        public StudentView()
+        public AttendanceView()
         {
             InitializeComponent();
-            DataContext = new StudentViewModel();
+            DataContext = new AttendanceViewModel();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -21,7 +21,7 @@ namespace SchoolBusWPF.Views
 
             var button = (sender as Button)!;
             var context = button.DataContext!;
-            var viewModel = (DataContext as StudentViewModel)!;
+            var viewModel = (DataContext as AttendanceViewModel)!;
 
             viewModel.DeleteEntity(context);
         }
