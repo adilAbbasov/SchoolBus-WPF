@@ -19,7 +19,7 @@
 
             <Button Style="{StaticResource CRUDButton}" Width="65" Height="30" HorizontalAlignment="Left" Margin="0 10 0 0" Command="{Binding OpenPopupCommand}" Content="Add" />
 
-            <Popup x:Name="holidayPopup" IsOpen="{Binding IsPopupOpen}" Placement="Center" PlacementTarget="{Binding ElementName=rootGrid}" AllowsTransparency="True">
+            <Popup IsOpen="{Binding IsPopupOpen}" Placement="Center" PlacementTarget="{Binding ElementName=rootGrid}" AllowsTransparency="True">
                 <Border Background="White" BorderBrush="LightGray" BorderThickness="1" CornerRadius="20">
                     <StackPanel Orientation="Vertical" Width="300" materialDesign:ShadowAssist.Darken="True" Margin="20">
                         <TextBlock HorizontalAlignment="Center" Foreground="Orange" FontSize="24" Text="New Holiday" />

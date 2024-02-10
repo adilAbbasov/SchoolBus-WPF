@@ -1,89 +1,158 @@
 ﻿using MaterialDesignThemes.Wpf;
 using SchoolBusWPF.Models.Concretes;
 using SchoolBusWPF.ViewModels;
+using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SchoolBusWPF.Views
 {
-    public partial class RideView : Page
-    {
-        public RideView()
-        {
-            InitializeComponent();
-            DataContext = new RideViewModel();
-        }
+	public partial class RideView : Page
+	{
+		private DispatcherTimer timer;
+		private int progressValue;
+		private int count = 0;
 
-        private void StudentButtonClick(object sender, RoutedEventArgs e)
-        {
-            var button = (sender as Button)!;
-            var context = (button.DataContext as Student)!;
-            var viewModel = (DataContext as RideViewModel)!;
-           
-            var result = viewModel.UpdateStudent(context);
+		public RideView()
+		{
+			InitializeComponent();
+			DataContext = new RideViewModel();
 
-            switch (result)
-            {
-                case 0:
-                    return;
-                case 1:
-                    {
-                        if (button.Content is PackIcon icon)
-                        {
-                            icon.Kind = PackIconKind.RemoveBold;
-                            icon.Foreground = new SolidColorBrush(Colors.OrangeRed);
-                        }
-                    }
-                    break;
-                case -1:
-                    {
-                        if (button.Content is PackIcon icon)
-                        {
-                            icon.Kind = PackIconKind.AddBold;
-                            icon.Foreground = new SolidColorBrush(Colors.ForestGreen);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
+			//var outPutDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!.Split("bin")[0];
+			//var schoolBusGifFullPath = Path.Combine(outPutDirectory, "Images\\schoolbusgif.gif");
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            var result = MessageBox.Show("Are you sure you want to delete this data?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+			//var schoolBusGifImage = new BitmapImage();
+			//schoolBusGifImage.BeginInit();
+			//schoolBusGifImage.UriSource = new Uri(schoolBusGifFullPath);
+			//schoolBusGifImage.EndInit();
 
-            if (result == MessageBoxResult.No)
-                return;
+			//this.schoolBusGifImage.Source = schoolBusGifImage;
+		}
 
-            var button = (sender as Button)!;
-            var context = button.DataContext!;
-            var viewModel = (DataContext as RideViewModel)!;
+		private void StudentButtonClick(object sender, RoutedEventArgs e)
+		{
+			var button = (sender as Button)!;
+			var context = (button.DataContext as Student)!;
+			var viewModel = (DataContext as RideViewModel)!;
 
-            viewModel.DeleteEntity(context);
-        }
+			var result = viewModel.UpdateStudent(context);
 
-        private void StartButton_Click(object sender, RoutedEventArgs e)
-        {
-            var result = MessageBox.Show("Are you sure you want to start this ride?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+			switch (result)
+			{
+				case 0:
+					return;
+				case 1:
+					{
+						if (button.Content is PackIcon icon)
+						{
+							icon.Kind = PackIconKind.RemoveBold;
+							icon.Foreground = new SolidColorBrush(Colors.OrangeRed);
+						}
+					}
+					break;
+				case -1:
+					{
+						if (button.Content is PackIcon icon)
+						{
+							icon.Kind = PackIconKind.AddBold;
+							icon.Foreground = new SolidColorBrush(Colors.ForestGreen);
+						}
+					}
+					break;
+				default:
+					break;
+			}
+		}
 
-            if (result == MessageBoxResult.No)
-                return;
+		private void DeleteButton_Click(object sender, RoutedEventArgs e)
+		{
+			var result = MessageBox.Show("Are you sure you want to delete this data?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
-            var viewModel = (DataContext as RideViewModel)!;
-            var canStart = viewModel.CanStartRide();
+			if (result == MessageBoxResult.No)
+				return;
 
-            if (!canStart)
-            {
-                MessageBox.Show("Ride cannot start on holidays!", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
+			var button = (sender as Button)!;
+			var context = button.DataContext!;
+			var viewModel = (DataContext as RideViewModel)!;
 
-            //
+			viewModel.DeleteEntity(context);
+		}
 
-            var context = (sender as Button)!.DataContext;
-            viewModel.StartRide(context);
-        }
-    }
+		private void StartButton_Click(object sender, RoutedEventArgs e)
+		{
+			var result = MessageBox.Show("Are you sure you want to start this ride?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+			if (result == MessageBoxResult.No)
+				return;
+
+			var viewModel = (DataContext as RideViewModel)!;
+			var canStart = viewModel.CanStartRide();
+
+			if (!canStart)
+			{
+				MessageBox.Show("Ride cannot start on holidays!", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+				return;
+			}
+
+			var context = (sender as Button)!.DataContext;
+			viewModel.StartRide(context);
+
+			ShowRidePopup();
+		}
+
+		private void ShowRidePopup()
+		{
+			ridePopup.IsOpen = true;
+
+			timer = new DispatcherTimer
+			{
+				Interval = TimeSpan.FromSeconds(0.03)
+			};
+
+			timer.Tick += Timer_Tick!;
+			timer.Start();
+		}
+
+		private void Timer_Tick(object sender, EventArgs e)
+		{
+			rideProgressBar.Value = progressValue++;
+			var value = rideProgressBar.Value / 10;
+
+			if ((value % 1) == 0)
+				UpdateDisplayString();
+
+			if (progressValue > 100)
+			{
+				closeButton.IsEnabled = true;
+				rideProgressBar.Visibility = Visibility.Collapsed;
+				rideTextBlock.Text = "Ride has started.";
+
+				timer.Stop();
+			}
+		}
+
+		private void UpdateDisplayString()
+		{
+			if (count < 3)
+			{
+				rideTextBlock.Text += ".";
+				count++;
+			}
+			else
+			{
+				rideTextBlock.Text = "Ride is starting ";
+				count = 0;
+			}
+		}
+
+		private void CloseButton_Click(object sender, RoutedEventArgs e)
+		{
+			ridePopup.IsOpen = false;
+		}
+	}
 }

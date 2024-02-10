@@ -21,18 +21,18 @@ namespace SchoolBusWPF
             var outPutDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!.Split("bin")[0];
             var schoolBusFullPath = Path.Combine(outPutDirectory, "Images\\schoolbus.jpg");
             var userFullPath = Path.Combine(outPutDirectory, "Images\\user.jpg");
-
-            var schoolImage = new BitmapImage();
-            schoolImage.BeginInit();
-            schoolImage.UriSource = new Uri(schoolBusFullPath);
-            schoolImage.EndInit();
+            
+            var logoImage = new BitmapImage();
+            logoImage.BeginInit();
+            logoImage.UriSource = new Uri(schoolBusFullPath);
+            logoImage.EndInit();
 
             var userImage = new BitmapImage();
             userImage.BeginInit();
             userImage.UriSource = new Uri(userFullPath);
             userImage.EndInit();
 
-            this.schoolImage.Source = schoolImage;
+            this.logoImage.Source = logoImage;
             this.userImage.Source = userImage;
         }
 
