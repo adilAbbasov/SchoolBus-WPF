@@ -158,8 +158,8 @@
             <Popup x:Name="ridePopup" Placement="Center" PlacementTarget="{Binding ElementName=rootGrid}" AllowsTransparency="True">
                 <Border Background="White" BorderBrush="LightGray" BorderThickness="1" CornerRadius="20">
                     <StackPanel materialDesign:ShadowAssist.Darken="True">
-                        <Grid Margin="6">
-                            <Image x:Name="schoolBusGifImage" Margin="10 0" gif:AnimationBehavior.SourceUri="C:\Users\acer\source\repos\SchoolBus-WPF\SchoolBusWPF\Images\schoolbusgif.gif"/>
+                        <Grid Margin="0 0 0 0">
+                            <Image Margin="30 35 30 20" gif:AnimationBehavior.SourceUri="/Resources/schoolbusgif.gif" />
                            
                             <Button x:Name="closeButton" Style="{StaticResource MaterialDesignRaisedButton}" Background="Transparent" BorderThickness="0" Padding="0 0 8 0" HorizontalAlignment="Right" VerticalAlignment="Top" IsEnabled="False" Click="CloseButton_Click">
                                 <materialDesign:PackIcon Width="20" Height="20" Kind="Close" Foreground="Black" />

@@ -15,7 +15,7 @@
 
         <Border BorderBrush="LightGray" BorderThickness="0 0 1 0">
             <StackPanel Grid.Column="0" Margin="20 20 20 0">
-                <Image x:Name="logoImage" HorizontalAlignment="Left" Width="120" Margin="0 0 0 20" VerticalAlignment="Top" />
+                <Image Source="/Resources/schoolbus.jpg" HorizontalAlignment="Left" Width="120" Margin="0 0 0 20" VerticalAlignment="Top" />
 
                 <Button Style="{StaticResource NavigationButton}" Click="Attendances_Click" Content="Attendances" />
                 <Button Style="{StaticResource NavigationButton}" Click="Rides_Click" Content="Rides" />
@@ -30,7 +30,7 @@
 
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="75"></RowDefinition>
+                <RowDefinition Height="70"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
@@ -56,7 +56,7 @@
 
                         <materialDesign:Chip FontSize="14" FontWeight="SemiBold" Content="James Willock">
                             <materialDesign:Chip.Icon>
-                                <Image x:Name="userImage" />
+                                <Image Source="/Resources/user.jpg" />
                             </materialDesign:Chip.Icon>
                         </materialDesign:Chip>
                     </StackPanel>

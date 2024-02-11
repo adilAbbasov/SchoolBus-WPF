@@ -1,39 +1,18 @@
 ﻿using SchoolBusWPF.ViewModels;
 using SchoolBusWPF.Views;
-using System.IO;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 
 namespace SchoolBusWPF
 {
-    public partial class MainWindow : Window
+	public partial class MainWindow : Window
     {
         private Dictionary<Type, Func<object>> viewModelFactories;
 
         public MainWindow()
         {
             InitializeComponent();
-
             mainFrame.Navigate(new Uri("Views/RideView.xaml", UriKind.Relative));
-
-            var outPutDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!.Split("bin")[0];
-            var schoolBusFullPath = Path.Combine(outPutDirectory, "Images\\schoolbus.jpg");
-            var userFullPath = Path.Combine(outPutDirectory, "Images\\user.jpg");
-            
-            var logoImage = new BitmapImage();
-            logoImage.BeginInit();
-            logoImage.UriSource = new Uri(schoolBusFullPath);
-            logoImage.EndInit();
-
-            var userImage = new BitmapImage();
-            userImage.BeginInit();
-            userImage.UriSource = new Uri(userFullPath);
-            userImage.EndInit();
-
-            this.logoImage.Source = logoImage;
-            this.userImage.Source = userImage;
         }
 
         private void Attendances_Click(object sender, RoutedEventArgs e)

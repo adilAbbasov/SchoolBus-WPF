@@ -22,16 +22,6 @@ namespace SchoolBusWPF.Views
 		{
 			InitializeComponent();
 			DataContext = new RideViewModel();
-
-			//var outPutDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!.Split("bin")[0];
-			//var schoolBusGifFullPath = Path.Combine(outPutDirectory, "Images\\schoolbusgif.gif");
-
-			//var schoolBusGifImage = new BitmapImage();
-			//schoolBusGifImage.BeginInit();
-			//schoolBusGifImage.UriSource = new Uri(schoolBusGifFullPath);
-			//schoolBusGifImage.EndInit();
-
-			//this.schoolBusGifImage.Source = schoolBusGifImage;
 		}
 
 		private void StudentButtonClick(object sender, RoutedEventArgs e)
@@ -100,25 +90,23 @@ namespace SchoolBusWPF.Views
 			}
 
 			var context = (sender as Button)!.DataContext;
-			viewModel.StartRide(context);
-
-			ShowRidePopup();
+			ShowRidePopup(viewModel, context);
 		}
 
-		private void ShowRidePopup()
+		private void ShowRidePopup(RideViewModel viewModel, object context)
 		{
 			ridePopup.IsOpen = true;
 
 			timer = new DispatcherTimer
 			{
-				Interval = TimeSpan.FromSeconds(0.03)
+				Interval = TimeSpan.FromSeconds(0.05)
 			};
 
-			timer.Tick += Timer_Tick!;
+			timer.Tick += (sender, e) => Timer_Tick(sender!, e, viewModel, context);
 			timer.Start();
 		}
 
-		private void Timer_Tick(object sender, EventArgs e)
+		private void Timer_Tick(object sender, EventArgs e, RideViewModel viewModel, object context)
 		{
 			rideProgressBar.Value = progressValue++;
 			var value = rideProgressBar.Value / 10;
@@ -128,6 +116,8 @@ namespace SchoolBusWPF.Views
 
 			if (progressValue > 100)
 			{
+				viewModel.StartRide(context);
+
 				closeButton.IsEnabled = true;
 				rideProgressBar.Visibility = Visibility.Collapsed;
 				rideTextBlock.Text = "Ride has started.";
