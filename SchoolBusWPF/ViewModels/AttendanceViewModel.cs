@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MaterialDesignThemes.Wpf;
+using Microsoft.EntityFrameworkCore;
 using SchoolBusWPF.Data;
 using SchoolBusWPF.Models.Concretes;
 using System.Collections.ObjectModel;
@@ -36,6 +37,12 @@ namespace SchoolBusWPF.ViewModels
 
             Attendances = new ObservableCollection<Attendance>([.. _dbContext.Attendances]);
         }
+
+        public void SearchData(string pattern)
+        {
+            Attendances = new ObservableCollection<Attendance>([.. _dbContext.Attendances.Include(a => a.Student).Where(a => a.Student!.FirstName!.Contains(pattern.ToLower()) || a.Student!.LastName!.Contains(pattern.ToLower()))]);
+        }
+
 
         //
 

@@ -15,6 +15,8 @@ namespace SchoolBusWPF
 
         private void Attendances_Click(object sender, RoutedEventArgs e)
         {
+            searchTxtBx.Text = string.Empty;
+
             if(mainFrame.Content is RideView content)
                 content.RemoveRidePopup();
 
@@ -23,6 +25,8 @@ namespace SchoolBusWPF
 
         private void Cars_Click(object sender, RoutedEventArgs e)
         {
+            searchTxtBx.Text = string.Empty;
+
             if (mainFrame.Content is RideView content)
                 content.RemoveRidePopup();
 
@@ -31,6 +35,8 @@ namespace SchoolBusWPF
 
         private void Drivers_Click(object sender, RoutedEventArgs e)
         {
+            searchTxtBx.Text = string.Empty;
+
             if (mainFrame.Content is RideView content)
                 content.RemoveRidePopup();
 
@@ -39,6 +45,8 @@ namespace SchoolBusWPF
 
         private void Groups_Click(object sender, RoutedEventArgs e)
         {
+            searchTxtBx.Text = string.Empty;
+
             if (mainFrame.Content is RideView content)
                 content.RemoveRidePopup();
 
@@ -47,6 +55,8 @@ namespace SchoolBusWPF
 
         private void Holidays_Click(object sender, RoutedEventArgs e)
         {
+            searchTxtBx.Text = string.Empty;
+
             if (mainFrame.Content is RideView content)
                 content.RemoveRidePopup();
 
@@ -55,6 +65,8 @@ namespace SchoolBusWPF
 
         private void Parents_Click(object sender, RoutedEventArgs e)
         {
+            searchTxtBx.Text = string.Empty;
+
             if (mainFrame.Content is RideView content)
                 content.RemoveRidePopup();
 
@@ -63,11 +75,15 @@ namespace SchoolBusWPF
 
         private void Rides_Click(object sender, RoutedEventArgs e)
         {
+            searchTxtBx.Text = string.Empty;
+
             mainFrame.Navigate(new Uri("Views/RideView.xaml", UriKind.Relative));
         }
 
         private void Students_Click(object sender, RoutedEventArgs e)
         {
+            searchTxtBx.Text = string.Empty;
+
             if (mainFrame.Content is RideView content)
                 content.RemoveRidePopup();
 
@@ -76,37 +92,25 @@ namespace SchoolBusWPF
 
         private void SearchTxtBx_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var pattern = (sender as TextBox)?.Text!;
             var content = mainFrame.Content!;
+            var pattern = (sender as TextBox)?.Text!;
 
-            if (content is CarView)
-            {
+            if (content is AttendanceView)
+                ((content as AttendanceView)?.DataContext as AttendanceViewModel)?.SearchData(pattern);
+            else if (content is CarView)
                 ((content as CarView)?.DataContext as CarViewModel)?.SearchData(pattern);
-            }
             else if (content is DriverView)
-            {
                 ((content as DriverView)?.DataContext as DriverViewModel)?.SearchData(pattern);
-            }
             else if (content is GroupView)
-            {
                 ((content as GroupView)?.DataContext as GroupViewModel)?.SearchData(pattern);
-            }
             else if (content is HolidayView)
-            {
                 ((content as HolidayView)?.DataContext as HolidayViewModel)?.SearchData(pattern);
-            }
             else if (content is ParentView)
-            {
                 ((content as ParentView)?.DataContext as ParentViewModel)?.SearchData(pattern);
-            }
             else if (content is RideView)
-            {
                 ((content as RideView)?.DataContext as RideViewModel)?.SearchData(pattern);
-            }
             else if (content is StudentView)
-            {
                 ((content as StudentView)?.DataContext as StudentViewModel)?.SearchData(pattern);
-            }
         }
     }
 }
