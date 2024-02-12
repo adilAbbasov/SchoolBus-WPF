@@ -7,8 +7,6 @@ namespace SchoolBusWPF
 {
 	public partial class MainWindow : Window
     {
-        private Dictionary<Type, Func<object>> viewModelFactories;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -17,31 +15,49 @@ namespace SchoolBusWPF
 
         private void Attendances_Click(object sender, RoutedEventArgs e)
         {
+            if(mainFrame.Content is RideView content)
+                content.RemoveRidePopup();
+
             mainFrame.Navigate(new Uri("Views/AttendanceView.xaml", UriKind.Relative));
         }
 
         private void Cars_Click(object sender, RoutedEventArgs e)
         {
+            if (mainFrame.Content is RideView content)
+                content.RemoveRidePopup();
+
             mainFrame.Navigate(new Uri("Views/CarView.xaml", UriKind.Relative));
         }
 
         private void Drivers_Click(object sender, RoutedEventArgs e)
         {
+            if (mainFrame.Content is RideView content)
+                content.RemoveRidePopup();
+
             mainFrame.Navigate(new Uri("Views/DriverView.xaml", UriKind.Relative));
         }
 
         private void Groups_Click(object sender, RoutedEventArgs e)
         {
+            if (mainFrame.Content is RideView content)
+                content.RemoveRidePopup();
+
             mainFrame.Navigate(new Uri("Views/GroupView.xaml", UriKind.Relative));
         }
 
         private void Holidays_Click(object sender, RoutedEventArgs e)
         {
+            if (mainFrame.Content is RideView content)
+                content.RemoveRidePopup();
+
             mainFrame.Navigate(new Uri("Views/HolidayView.xaml", UriKind.Relative));
         }
 
         private void Parents_Click(object sender, RoutedEventArgs e)
         {
+            if (mainFrame.Content is RideView content)
+                content.RemoveRidePopup();
+
             mainFrame.Navigate(new Uri("Views/ParentView.xaml", UriKind.Relative));
         }
 
@@ -52,6 +68,9 @@ namespace SchoolBusWPF
 
         private void Students_Click(object sender, RoutedEventArgs e)
         {
+            if (mainFrame.Content is RideView content)
+                content.RemoveRidePopup();
+
             mainFrame.Navigate(new Uri("Views/StudentView.xaml", UriKind.Relative));
         }
 

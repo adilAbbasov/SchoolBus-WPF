@@ -22,7 +22,10 @@ namespace SchoolBusWPF.Views
 		{
 			InitializeComponent();
 			DataContext = new RideViewModel();
-		}
+
+			//var mapControl = new Mapconrol
+
+        }
 
 		private void StudentButtonClick(object sender, RoutedEventArgs e)
 		{
@@ -99,7 +102,7 @@ namespace SchoolBusWPF.Views
 
 			timer = new DispatcherTimer
 			{
-				Interval = TimeSpan.FromSeconds(0.05)
+				Interval = TimeSpan.FromSeconds(0.04)
 			};
 
 			timer.Tick += (sender, e) => Timer_Tick(sender!, e, viewModel, context);
@@ -118,9 +121,10 @@ namespace SchoolBusWPF.Views
 			{
 				viewModel.StartRide(context);
 
+				rideBorder.CornerRadius = new CornerRadius(0);
 				closeButton.IsEnabled = true;
-				rideProgressBar.Visibility = Visibility.Collapsed;
-				rideTextBlock.Text = "Ride has started.";
+                rideStart.Visibility = Visibility.Collapsed;
+				map.Visibility = Visibility.Visible;
 
 				timer.Stop();
 			}
@@ -143,6 +147,15 @@ namespace SchoolBusWPF.Views
 		private void CloseButton_Click(object sender, RoutedEventArgs e)
 		{
 			ridePopup.IsOpen = false;
+
 		}
-	}
+
+		public void RemoveRidePopup()
+		{
+            if (ridePopup.Parent is Panel parent)
+            {
+                parent.Children.Remove(ridePopup);
+            }
+        }
+    }
 }

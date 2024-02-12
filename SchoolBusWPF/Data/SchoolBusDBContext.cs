@@ -16,7 +16,7 @@ namespace SchoolBusWPF.Data
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlServer("Data Source=ADIL;Initial Catalog=SchoolBusWPF;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+			optionsBuilder.UseSqlServer("Data Source=DESKTOP-HMS6GCF\\SQLEXPRESS;Initial Catalog=SchoolBus;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)

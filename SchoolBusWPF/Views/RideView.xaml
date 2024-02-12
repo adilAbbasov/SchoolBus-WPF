@@ -5,6 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
+
+      xmlns:map="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Rides">
@@ -156,21 +158,25 @@
             </Popup>
 
             <Popup x:Name="ridePopup" Placement="Center" PlacementTarget="{Binding ElementName=rootGrid}" AllowsTransparency="True">
-                <Border Background="White" BorderBrush="LightGray" BorderThickness="1" CornerRadius="20">
-                    <StackPanel materialDesign:ShadowAssist.Darken="True">
-                        <Grid Margin="0 0 0 0">
-                            <Image Margin="30 35 30 20" gif:AnimationBehavior.SourceUri="/Resources/schoolbusgif.gif" />
-                           
-                            <Button x:Name="closeButton" Style="{StaticResource MaterialDesignRaisedButton}" Background="Transparent" BorderThickness="0" Padding="0 0 8 0" HorizontalAlignment="Right" VerticalAlignment="Top" IsEnabled="False" Click="CloseButton_Click">
-                                <materialDesign:PackIcon Width="20" Height="20" Kind="Close" Foreground="Black" />
-                            </Button>
-                        </Grid>
+                <Border x:Name="rideBorder" Background="White" BorderBrush="LightGray" BorderThickness="1" CornerRadius="20" ClipToBounds="True">
+                    <Grid materialDesign:ShadowAssist.Darken="True">
+                        <Button x:Name="closeButton" Style="{StaticResource MaterialDesignRaisedButton}" Background="Transparent" BorderThickness="0" Padding="0 5 10 0" HorizontalAlignment="Right" VerticalAlignment="Top" IsEnabled="False" Click="CloseButton_Click" Panel.ZIndex="100">
+                            <materialDesign:PackIcon Width="20" Height="20" Kind="Close" Foreground="Black" />
+                        </Button>
 
-                        <StackPanel Margin="25 0 25 20">
+                        <StackPanel x:Name="rideStart" Margin="20 30 20 20" Visibility="Visible">
+                            <Image Margin="20 10 20 30" gif:AnimationBehavior.SourceUri="/Resources/schoolbusgif.gif" />
                             <ProgressBar x:Name="rideProgressBar" Foreground="Orange" Background="LightGray" BorderThickness="0" Margin="0 0 0 10" />
                             <TextBlock x:Name="rideTextBlock" Foreground="Orange" FontSize="18" Text="Ride is starting " />
                         </StackPanel>
-                    </StackPanel>
+
+                        <map:Map x:Name="map" Visibility="Collapsed" CredentialsProvider="AsEMpiE_eX2E93F8JEcHbDwo0NBNIT5F_W4AvRaukbNxoVcWxj1cRo8qBA4Ur9JK" Mode="Road" ZoomLevel="18" Center="40.414942405276435, 49.853082937156216" Height="600" Width="800">
+                            <Canvas map:MapLayer.Position="40.414942405276435, 49.853082937156216"
+                                    map:MapLayer.PositionOrigin="BottomCenter" Width="30" Height="30">
+                                <materialDesign:PackIcon Kind="MapMarker" Width="30" Height="30" Foreground="Orange" />
+                            </Canvas>
+                        </map:Map>
+                    </Grid>
                 </Border>
             </Popup>
         </StackPanel>
